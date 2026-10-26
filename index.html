@@ -11,7 +11,7 @@
 <meta property="og:image" content="assets/img/decor/hero.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="assets/img/decor/hero.webp">
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2366704A'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='20' fill='%23F4F1E9' text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E">
@@ -68,25 +68,23 @@
 <main id="main">
   <!-- HERO -->
   <section class="hero" id="top">
-    <div class="hero__media" data-gl="hero" data-focus="0.6,0.75">
-      <img src="assets/img/decor/hero.webp" alt="Woman in an ivory linen shirt and wide-leg trousers standing in warm sunlight against a stone wall" width="1672" height="941" fetchpriority="high">
-    </div>
-    <div class="hero__shade" aria-hidden="true"></div>
-    <div class="hero__content wrap">
-      <div class="hero__bottom">
-        <div>
-          <p class="eyebrow hero__eyebrow"><span>(SS26)</span><span>The Linen Edit</span></p>
-          <p class="hero__lead">Natural fabrics. Considered silhouettes.<br>A little more room to breathe.</p>
-        </div>
-        <a href="#featured" class="btn btn--dark hero__cta"><span>Explore the collection</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    <p class="hero__corner hero__corner--tl eyebrow"><span class="num">(SS26)</span>The Linen Edit</p>
+    <p class="hero__corner hero__corner--tr eyebrow">Linen, made in Ukraine</p>
+    <div class="hero__frame">
+      <div class="hero__media" data-gl="hero" data-focus="0.77,0.5">
+        <img src="assets/img/decor/hero.webp" alt="Woman in an ivory linen shirt and wide-leg trousers standing in warm sunlight against a stone wall" width="1672" height="941" fetchpriority="high">
       </div>
-      <h1 class="hero__title" data-fit aria-label="Made to Feel Free.">
-        <span class="line"><span class="ln">Made to</span></span>
-        <span class="line"><span class="ln">Feel Free.</span></span>
-      </h1>
+      <button class="hotspot hero__hotspot" data-look="hero" style="--x:52%;--y:36%" aria-label="Shop this look: Zoria Linen Set"><i></i><span class="hotspot__tag"><b>Zoria Linen Set</b><em>₴4 850</em></span></button>
     </div>
-    <button class="hotspot hero__hotspot" data-look="hero" style="--x:67%;--y:33%" aria-label="Shop this look: Zoria Linen Set"><i></i><span class="hotspot__tag"><b>Zoria Linen Set</b><em>₴4 850</em></span></button>
-    <div class="hero__meta" aria-hidden="true"><span>Linen, made in Ukraine</span><span>Scroll to explore ↓</span></div>
+    <h1 class="hero__title" aria-label="Made to Feel Free.">
+      <span class="line line--a"><span class="ln">Made to</span></span>
+      <span class="line line--b"><span class="ln">Feel Free.</span></span>
+    </h1>
+    <div class="hero__foot">
+      <p class="hero__lead">Natural fabrics. Considered silhouettes.<br>A little more room to breathe.</p>
+      <span class="hero__scrollcue" aria-hidden="true">Scroll</span>
+      <a href="#featured" class="btn btn--dark hero__cta"><span>Explore the collection</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
   </section>
 
   <!-- MARQUEE -->
@@ -134,7 +132,7 @@
       <div class="editorial__media" data-gl="editorial" data-focus="0.5,0.5"><img src="assets/img/decor/architecture.webp" alt="Sunlit Mediterranean architecture with olive leaf shadows on textured walls" width="1672" height="941" loading="lazy"></div>
       <div class="editorial__text">
         <p class="eyebrow">Lookbook · Summer 26</p>
-        <h2 class="editorial__title"><span>Linen,</span> <span>in its own</span> <span>rhythm.</span></h2>
+        <h2 class="editorial__title"><span>Linen,</span> <span>in its own</span> <span><em>rhythm.</em></span></h2>
       </div>
     </div>
   </section>

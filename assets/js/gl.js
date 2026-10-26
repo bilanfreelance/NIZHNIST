@@ -264,6 +264,14 @@ export class GL {
     it.press = 1.6; // a little wave on change
   }
 
+  // Upload every texture and compile shaders up-front so nothing stutters on first scroll
+  warmup() {
+    const vis = this.items.map(it => it.mesh.visible);
+    this.items.forEach(it => { it.mesh.visible = true; Object.values(it.u).forEach(u => u.value?.isTexture && this.renderer.initTexture(u.value)); });
+    (it => it)(this.renderer.compile(this.scene, this.camera));
+    this.items.forEach((it, i) => (it.mesh.visible = vis[i]));
+  }
+
   item(el) { return this.byEl.get(el); }
 
   hover(el, on) { const it = this.byEl.get(el); if (it) it.hoverT = on ? 1 : 0; }

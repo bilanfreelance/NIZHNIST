@@ -95,7 +95,6 @@ function openUI(id) {
   el.classList.add('is-open');
   el.setAttribute('aria-hidden', 'false');
   lenis?.stop();
-  document.documentElement.style.overflow = 'hidden';
   setTimeout(() => (el.querySelector('input, [data-close]') || el).focus(), 60);
 }
 function closeUI(swap) {
@@ -107,7 +106,6 @@ function closeUI(swap) {
   scrim.classList.remove('is-on');
   setTimeout(() => { if (!openPanel) scrim.hidden = true; }, 500);
   lenis?.start();
-  document.documentElement.style.overflow = '';
   lastFocus?.focus?.();
 }
 scrim.addEventListener('click', () => closeUI());
@@ -191,22 +189,6 @@ function toggleWish(id, btn) {
   wish = on ? [...wish, id] : wish.filter(x => x !== id);
   store.set('wish', wish);
   updateCounts(); syncHearts();
-
-/* ---------------------------------------------------------
-   Fit giant headlines to the full content width
-   --------------------------------------------------------- */
-function fitText() {
-  $$('[data-fit]').forEach(el => {
-    el.style.fontSize = '100px';
-    const range = document.createRange(); range.selectNodeContents(el);
-    const w = range.getBoundingClientRect().width;
-    const target = el.clientWidth;
-    if (w > 0 && target > 0) el.style.fontSize = (100 * target / w * .995).toFixed(2) + 'px';
-  });
-}
-fitText();
-document.fonts?.ready.then(() => { fitText(); window.ScrollTrigger?.refresh(); });
-let fitT; window.addEventListener('resize', () => { clearTimeout(fitT); fitT = setTimeout(fitText, 120); });
   if (btn) { btn.classList.remove('pop'); void btn.offsetWidth; btn.classList.add('pop'); }
   toast(on ? `${PRODUCTS[id].name} saved to wishlist` : `Removed from wishlist`);
 }
@@ -349,6 +331,7 @@ burger.addEventListener('click', () => {
   const open = burger.getAttribute('aria-expanded') !== 'true';
   burger.setAttribute('aria-expanded', open); mmenu.classList.toggle('is-open', open); mmenu.setAttribute('aria-hidden', !open);
   open ? lenis?.stop() : lenis?.start();
+  if (open && gsap && !reduce) gsap.fromTo('.mmenu nav a', { yPercent: 60, opacity: 0 }, { yPercent: 0, opacity: 1, duration: .8, stagger: .06, ease: 'expo.out', delay: .25 });
 });
 $$('.mmenu a').forEach(a => a.addEventListener('click', closeMenu));
 
@@ -367,8 +350,8 @@ function fitText() {
   });
 }
 fitText();
-document.fonts?.ready.then(() => { fitText(); window.ScrollTrigger?.refresh(); });
-let fitT; window.addEventListener('resize', () => { clearTimeout(fitT); fitT = setTimeout(fitText, 120); });
+
+let fitT; window.addEventListener('resize', () => { clearTimeout(fitT); fitT = setTimeout(() => { fitText(); window.ScrollTrigger?.refresh(); }, 150); });
 
 /* ---------------------------------------------------------
    Motion
@@ -396,10 +379,11 @@ if (reduce || !gsap) {
 async function boot() {
   gsap.registerPlugin(ScrollTrigger);
   document.body.classList.add('is-loading');
+  try { await Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 2500))]); } catch {}
   splitHeadings(); fitText();
 
   // Smooth scroll
-  lenis = new window.Lenis({ duration: 1.15, smoothWheel: true, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+  lenis = new window.Lenis({ lerp: .085, smoothWheel: true, wheelMultiplier: .95, touchMultiplier: 1.4 });
   lenis.stop();
   lenis.on('scroll', ScrollTrigger.update);
 
@@ -428,6 +412,8 @@ async function boot() {
     $('.gl').remove(); gl = null;
   }
   setP(1);
+  gl?.warmup();
+  ScrollTrigger.refresh();
   await new Promise(r => setTimeout(r, 650));
   gsap.ticker.remove(progTween);
 
@@ -452,8 +438,8 @@ function intro(gl) {
     .add(() => { document.body.classList.remove('is-loading'); lenis.start(); });
   const hero = gl?.item($('.hero__media'));
   if (hero) tl.to(hero.u.uReveal, { value: 1, duration: 2.2, ease: 'power3.out' }, '-=.75');
-  tl.from('.hero__title .ch', { yPercent: 110, duration: 1.3, stagger: .028 }, hero ? '-=1.9' : '-=.6')
-    .from('.hero__eyebrow, .hero__lead, .hero__cta, .hero__scroll', { y: 18, opacity: 0, duration: .7, stagger: .08, ease: 'power3.out' }, '-=1')
+  tl.from('.hero__title .ch', { yPercent: 105, duration: 1.4, stagger: .03, ease: 'expo.out' }, hero ? '-=1.9' : '-=.6')
+    .from('.hero__corner, .hero__foot > *', { y: 16, opacity: 0, duration: .9, stagger: .07, ease: 'power3.out' }, '-=1.1')
     .from('.header__inner > *', { y: -12, opacity: 0, duration: .7, stagger: .06, ease: 'power3.out' }, '<')
     .from('.hero__hotspot', { scale: 0, opacity: 0, duration: .6, ease: 'back.out(2)' }, '-=.3');
 }
@@ -463,7 +449,15 @@ function scrollScenes(gl) {
   ScrollTrigger.create({ start: 60, end: 'max', onToggle: s => header.classList.toggle('is-scrolled', s.isActive) });
 
   // Hero text drifts as the image folds away
-  gsap.to('.hero__content', { yPercent: -18, opacity: 0, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+  const hs = { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: .6 };
+  gsap.to('.hero__title .line--a', { xPercent: -22, ease: 'none', scrollTrigger: hs });
+  gsap.to('.hero__title .line--b', { xPercent: 22, ease: 'none', scrollTrigger: hs });
+  gsap.to('.hero__frame', { yPercent: 14, ease: 'none', scrollTrigger: hs });
+  gsap.to('.hero__corner, .hero__foot', { opacity: 0, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: '35% top', scrub: true } });
+
+  // Dark statement opens like a panel
+  gsap.fromTo('.statement', { clipPath: 'inset(8% 6% 0% 6%)' }, { clipPath: 'inset(0% 0% 0% 0%)', ease: 'none',
+    scrollTrigger: { trigger: '.statement', start: 'top bottom', end: 'top 25%', scrub: .6 } });
 
   // Image reveals (WebGL)
   if (gl) {
@@ -485,7 +479,7 @@ function scrollScenes(gl) {
   $$('[data-speed]').forEach(el => gsap.to(el, { yPercent: parseFloat(el.dataset.speed) * 100, ease: 'none', scrollTrigger: { trigger: '.statement', start: 'top bottom', end: 'bottom top', scrub: true } }));
 
   // Editorial: the window opens to full bleed
-  const ed = gsap.timeline({ scrollTrigger: { trigger: '.editorial', start: 'top top', end: 'bottom bottom', scrub: true } });
+  const ed = gsap.timeline({ scrollTrigger: { trigger: '.editorial', start: 'top top', end: 'bottom bottom', scrub: .6 } });
   ed.to('.editorial__media', { width: '100vw', height: '100vh', ease: 'power2.inOut', duration: 1 })
     .fromTo('.editorial__title span', { yPercent: 40, opacity: 0 }, { yPercent: 0, opacity: 1, stagger: .12, duration: .5, ease: 'power3.out' }, .35)
     .fromTo('.editorial__text .eyebrow', { opacity: 0 }, { opacity: .8, duration: .3 }, .3)
