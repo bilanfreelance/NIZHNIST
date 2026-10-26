@@ -1,9 +1,9 @@
-import { initShop } from './shop.js?v=261026144635';
-import { initProduct } from './product.js?v=261026144635';
-import { initCart } from './cart.js?v=261026144635';
-import { initCheckout } from './checkout.js?v=261026144635';
-import { initContent } from './content.js?v=261026144635';
-import { PRODUCTS, COLORS, LOOKS, FREE_SHIPPING, money } from './data.js?v=261026144635';
+import { initShop } from './shop.js?v=261026145241';
+import { initProduct } from './product.js?v=261026145241';
+import { initCart } from './cart.js?v=261026145241';
+import { initCheckout } from './checkout.js?v=261026145241';
+import { initContent } from './content.js?v=261026145241';
+import { PRODUCTS, COLORS, LOOKS, FREE_SHIPPING, money } from './data.js?v=261026145241';
 
 const gsap = window.gsap;
 const ScrollTrigger = window.ScrollTrigger;
@@ -505,7 +505,7 @@ async function boot() {
   gsap.registerPlugin(ScrollTrigger);
   ScrollTrigger.config({ ignoreMobileResize: true });
   document.body.classList.add('is-loading');
-  try { await Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 2500))]); } catch {}
+  try { await Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 1500))]); } catch {}
   splitHeadings(); fitText();
 
   // Smooth scroll
@@ -527,11 +527,12 @@ async function boot() {
   });
 
   // Preload the first screen of imagery (drives the loader)
-  const first = [$('.hero__media img'), ...$$('[data-first] img, #featured .card__media .main').slice(0, 3)].filter(Boolean);
+  // only eager images — a lazy image below the fold never loads while the loader is up
+  const first = [$('.hero__media img'), ...$$('[data-first] img, #featured .card__media .main')].filter(i => i && i.loading !== 'lazy').slice(0, 3);
   let loaded = 0;
   await Promise.race([
     Promise.all(first.map(img => (img.complete ? Promise.resolve() : new Promise(r => { img.addEventListener('load', r, { once: true }); img.addEventListener('error', r, { once: true }); })).then(() => setP(++loaded / first.length)))),
-    new Promise(r => setTimeout(r, 6000)),
+    new Promise(r => setTimeout(r, 3000)),
   ]);
   try { await Promise.race([Promise.all(first.map(i => i.decode?.().catch(() => {}))), new Promise(r => setTimeout(r, 1200))]); } catch {}
   setP(1);
