@@ -823,3 +823,125 @@ body{background:var(--ivory)}
 .fpanel__copy{display:flex;justify-content:space-between;gap:12px;margin-top:10px;font-size:12px;color:#7D7C73}
 @media (max-width:1100px){.footer__grid{grid-template-columns:1fr 1fr}.fpanel{grid-column:1 / -1;aspect-ratio:auto;min-height:520px}}
 @media (max-width:560px){.footer__grid{grid-template-columns:1fr 1fr}.fshot__label b{font-size:10px}.fpanel__legal{flex-wrap:wrap}}
+
+/* =========================================================
+   Floating cards (lookbook, linen swatches, newsletter postcards)
+   ========================================================= */
+.fcard{position:absolute;margin:0;padding:0;border:0;background:none;display:block;opacity:0;will-change:transform;z-index:3}
+.fcard__in{display:block;background:var(--ivory);padding:7px 7px 0;box-shadow:0 24px 48px -18px rgba(34,35,29,.35),0 2px 6px rgba(34,35,29,.08)}
+.fcard img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover}
+.fcard--tex img{aspect-ratio:1/1}
+.fcard figcaption,.fcard__cap{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:9px 2px 10px;font-family:var(--ff);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);text-align:left}
+.fcard figcaption b,.fcard__cap b{font-weight:600}
+.fcard figcaption span,.fcard__cap span{color:var(--muted);letter-spacing:.04em;text-transform:none;font-size:11px}
+.editorial__shots .eshot{display:none}
+/* lookbook */
+.editorial__shots{z-index:3}
+.ec1{left:7%;top:14%;width:clamp(100px,9vw,170px)}
+.ec2{right:9%;top:10%;width:clamp(130px,13vw,240px)}
+.ec3{left:4%;top:56%;width:clamp(140px,14vw,260px)}
+.ec4{right:5%;top:58%;width:clamp(120px,12vw,220px)}
+.ec5{left:40%;top:70%;width:clamp(90px,8vw,150px)}
+/* linen swatches */
+.linen__fabric{position:relative}
+.linen__fly .fcard{cursor:pointer}
+.linen__fly .fcard:hover .fcard__in{transform:translateY(-6px)}
+.linen__fly .fcard__in{transition:transform .5s var(--ease-out)}
+.lc1{right:-7%;top:-6%;width:26%}
+.lc2{right:-12%;top:44%;width:23%}
+.lc3{left:-6%;bottom:12%;width:22%}
+/* newsletter postcards */
+.news{position:relative;overflow:hidden}
+.news__copy{position:relative;z-index:4}
+.nc1{left:6%;top:12%;width:clamp(120px,11vw,210px)}
+.nc2{left:15%;bottom:9%;width:clamp(100px,9vw,170px)}
+.nc3{right:7%;top:10%;width:clamp(110px,10vw,190px)}
+.nc4{right:14%;bottom:10%;width:clamp(120px,11vw,200px)}
+@media (max-width:900px){
+  .ec1,.ec5{display:none}
+  .ec2{right:4%;top:12%;width:30vw}.ec3{left:4%;top:64%;width:32vw}.ec4{right:4%;top:66%;width:28vw}
+  .lc1{right:-2%;width:30%}.lc2{right:-2%;width:26%}.lc3{left:-2%;width:26%}
+  .nc1{left:-4%;top:4%;width:30vw}.nc3{right:-4%;top:6%;width:28vw}.nc2,.nc4{display:none}
+}
+@media (prefers-reduced-motion:reduce){.fcard{opacity:1}}
+.fpanel__claim{font-family:var(--ff);font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#8C8B82;margin-top:16px;line-height:1.4}.fpanel__claim em{font-style:normal}
+.fcard figcaption,.fcard__cap{flex-direction:column;align-items:flex-start;gap:2px}
+.editorial__text{z-index:5}
+.ec3{top:64%}.ec4{top:66%}.ec5{top:78%;left:44%}
+
+/* =========================================================
+   UX pass — clear hotspots, quick view, shortcuts
+   ========================================================= */
+/* Hotspots: a visible "+" with a label that says what it is */
+.hotspot{width:auto;height:auto;margin:0;display:flex;align-items:center;gap:0;transform:translate(-14px,-14px)}
+.hotspot i{position:relative;width:28px;height:28px;border-radius:50%;background:var(--ivory);box-shadow:0 0 0 6px rgba(244,241,233,.35);display:grid;place-items:center;flex:none}
+.hotspot__plus::before,.hotspot__plus::after{content:"";position:absolute;left:50%;top:50%;width:10px;height:1.5px;margin:-.75px 0 0 -5px;background:var(--ink);transition:transform .4s var(--ease-out)}
+.hotspot__plus::after{transform:rotate(90deg)}
+.hotspot:hover .hotspot__plus::after{transform:rotate(0)}
+.hotspot__tag{position:static;transform:none;opacity:1;pointer-events:auto;margin-left:8px;padding:7px 12px;background:rgba(244,241,233,.94);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);font-size:12px;gap:10px;transition:background-color .3s}
+.hotspot:hover .hotspot__tag{transform:none;background:var(--ivory)}
+.hotspot__tag b{font-weight:600}
+@media (max-width:560px){.hotspot__tag{display:flex!important;font-size:11px;padding:6px 9px}}
+
+/* Look list items open quick view */
+.look__items li{padding:0}
+.look__items button{width:100%;display:flex;justify-content:space-between;padding:14px 0;font-size:15px;text-align:left}
+.look__items button span:first-child{font-weight:600}
+.look__items button:hover span:first-child{text-decoration:underline;text-underline-offset:4px}
+
+/* Hero: category shortcuts in the centre of the footer row */
+.hero__quick{display:flex;gap:6px;justify-self:center}
+.hero__quick a{font-size:12px;font-weight:600;padding:9px 14px;border:1px solid rgba(34,35,29,.2);transition:background-color .3s,border-color .3s}
+.hero__quick a:hover{background:var(--ink);color:var(--ivory);border-color:var(--ink)}
+.hero{height:260vh;height:260svh}
+@media (max-width:900px){.hero__quick{display:none}}
+
+/* Product cards inside the lookbook can be opened */
+.editorial__shots .fcard[data-qv]{pointer-events:auto;cursor:pointer}
+.editorial__shots .fcard[data-qv]:hover .fcard__in{box-shadow:0 30px 60px -18px rgba(34,35,29,.5)}
+.fcard[data-qv]:focus-visible{outline:2px solid var(--ivory);outline-offset:4px}
+
+/* Quick view drawer */
+.drawer--qv{width:min(1120px,100vw);display:block}
+.qv{height:100%;overflow-y:auto;display:grid;grid-template-columns:1.25fr 1fr;overscroll-behavior:contain}
+.qv__gallery{display:flex;flex-direction:column;gap:6px;padding:6px}
+.qv__gallery figure{position:relative;margin:0}
+.qv__gallery img{width:100%;aspect-ratio:3/4;object-fit:cover;background:#EAE4D8;display:block}
+.qv__gallery figcaption{position:absolute;left:14px;bottom:12px;font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;background:rgba(244,241,233,.9);padding:5px 8px}
+.qv__info{position:sticky;top:0;align-self:start;padding:clamp(28px,3vw,48px);display:flex;flex-direction:column}
+.qv__close{position:absolute;right:14px;top:14px;z-index:3;background:rgba(244,241,233,.9)}
+.qv__name{font-family:var(--ff-d);font-weight:400;font-size:clamp(36px,3.4vw,56px);line-height:.95;letter-spacing:-.01em;margin-top:14px}
+.qv__price{font-size:20px;font-weight:500;margin-top:14px}
+.qv__sub{color:var(--muted);margin-top:6px;font-size:15px}
+.qv__color{display:flex;align-items:center;gap:10px;margin-top:22px;font-size:14px}
+.qv__color b{font-weight:600}
+.qv__sizehead{display:flex;justify-content:space-between;margin-top:22px;font-size:13px;font-weight:600}
+.qv__guide{font-size:12px;text-decoration:underline;text-underline-offset:3px;color:var(--muted)}
+.qv__sizes{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.qv__sizes .size{height:52px;border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.qv__sizes .size small{font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.qv__sizes .size[aria-checked="true"]{background:var(--ink);color:var(--ivory);border-color:var(--ink)}
+.qv__sizes .size:not([aria-disabled]):hover{border-color:var(--ink);background:transparent;color:var(--ink)}
+.qv__sizes .size[aria-checked="true"]:hover{background:var(--ink);color:var(--ivory)}
+.qv__err{min-height:20px;font-size:13px;color:#A3472F;margin:8px 0 6px}
+.qv__add{height:56px}
+.qv__add em{font-style:normal;font-weight:500}
+.qv__wish{display:flex;align-items:center;justify-content:center;gap:8px;height:48px;margin-top:8px;border:1px solid var(--line);font-size:13px;font-weight:600}
+.qv__wish svg{width:18px;height:18px;fill:transparent;stroke:currentColor;stroke-width:1.4;transition:fill .3s}
+.qv__wish[aria-pressed="true"] svg{fill:var(--olive);stroke:var(--olive)}
+.qv__perks{display:grid;gap:6px;margin:20px 0 8px;font-size:13px;color:var(--muted)}
+.qv__perks li::before{content:"✓";color:var(--olive);margin-right:10px;font-weight:700}
+.qv__acc{border-top:1px solid var(--line)}
+.qv__acc:last-child{border-bottom:1px solid var(--line)}
+.qv__acc summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;padding:16px 0;font-size:14px;font-weight:600}
+.qv__acc summary::-webkit-details-marker{display:none}
+.qv__acc summary::after{content:"+";font-weight:400;font-size:18px;line-height:1;transition:transform .3s}
+.qv__acc[open] summary::after{transform:rotate(45deg)}
+.qv__acc p{font-size:14px;color:var(--muted);padding-bottom:16px}
+@media (max-width:900px){
+  .qv{grid-template-columns:1fr}
+  .qv__gallery{flex-direction:row;overflow-x:auto;scroll-snap-type:x mandatory;padding:0;gap:0}
+  .qv__gallery figure{flex:0 0 86%;scroll-snap-align:start}
+  .qv__info{position:static;padding:24px 20px 40px}
+}
+input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none;display:none}

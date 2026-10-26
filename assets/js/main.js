@@ -111,6 +111,7 @@ function closeUI(swap) {
 }
 scrim.addEventListener('click', () => closeUI());
 document.addEventListener('keydown', e => {
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches?.('.fcard[data-qv]')) { e.preventDefault(); openQV(e.target.dataset.qv); }
   if (e.key === 'Escape') { closeUI(); closeMenu(); }
   if (e.key === 'Tab' && openPanel) {
     const f = $$('a[href], button:not([disabled]), input', openPanel).filter(x => x.offsetParent !== null);
@@ -123,6 +124,10 @@ document.addEventListener('click', e => {
   const o = e.target.closest('[data-open]');
   if (o) { e.preventDefault(); if (o.dataset.open === 'cart') renderCart(); if (o.dataset.open === 'wishlist') renderWish(); openUI(o.dataset.open); }
   if (e.target.closest('[data-close]')) closeUI();
+  const qv = e.target.closest('[data-qv]');
+  if (qv && !e.target.closest('.card')) { e.preventDefault(); openQV(qv.dataset.qv); return; }
+  const os = e.target.closest('[data-open-search]');
+  if (os) { e.preventDefault(); q.value = os.dataset.openSearch; renderSearch(); openUI('search'); return; }
   const l = e.target.closest('[data-look]');
   if (l) { e.preventDefault(); renderLook(l.dataset.look); openUI('look'); }
 });
@@ -238,7 +243,7 @@ document.addEventListener('click', e => {
       renderCart(); openUI('cart');
     }, 550);
   }
-  if (e.target.closest('.card__link, .card__name a')) { e.preventDefault(); toast('Product page — coming in the next step'); }
+  if (e.target.closest('.card__link, .card__name a')) { e.preventDefault(); openQV(id); }
 });
 
 /* ---------------------------------------------------------
@@ -294,6 +299,49 @@ $('.look__all').addEventListener('click', () => {
 });
 
 /* ---------------------------------------------------------
+   Quick view — the shortest path from any image to the bag
+   --------------------------------------------------------- */
+let qvId = null, qvSize = null;
+function openQV(id) {
+  const p = PRODUCTS[id]; if (!p) return;
+  qvId = id; qvSize = null;
+  const c = COLORS[p.color];
+  const views = [['front', 'Front'], ['alt', 'Alternate view'], ['back', 'Back'], ['macro', 'Texture detail']];
+  $('.qv__gallery').innerHTML = views.map(([k, l], i) => `<figure><img src="${p.img[k]}" alt="${p.name} — ${l.toLowerCase()}" width="960" height="1280" ${i ? 'loading="lazy"' : ''}><figcaption>0${i + 1} / ${l}</figcaption></figure>`).join('');
+  $('.qv__cat').textContent = `${p.cat} · ${p.no} / 08`;
+  $('.qv__name').textContent = p.name;
+  $('.qv__price').textContent = money(p.price);
+  $('.qv__p').textContent = money(p.price);
+  $('.qv__sub').textContent = p.sub;
+  $('.qv__desc').textContent = `${p.sub}. Cut from natural linen with a relaxed, easy drape — designed to feel light on warm days and to soften with every wear.`;
+  $('.qv__color').innerHTML = `<span class="swatch is-active" style="--c:${c.hex}"></span>Colour: <b>${c.name}</b>`;
+  $('.qv__sizes').innerHTML = SIZES.map(s => `<button class="size" role="radio" aria-checked="false" data-size="${s}" ${p.sizes[s] ? '' : 'aria-disabled="true" title="Sold out"'}>${s}${p.sizes[s] ? '' : '<small>Sold out</small>'}</button>`).join('');
+  $('.qv__err').textContent = '';
+  const w = $('.qv__wish'); w.setAttribute('aria-pressed', wish.includes(id)); $('span', w).textContent = wish.includes(id) ? 'Saved to wishlist' : 'Save to wishlist';
+  $('.qv').scrollTop = 0;
+  openUI('qv');
+  if (gsap && !reduce) gsap.fromTo('.qv__gallery figure, .qv__info > *', { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: .8, stagger: .04, ease: 'expo.out', delay: .25 });
+}
+$('.qv__sizes').addEventListener('click', e => {
+  const s = e.target.closest('.size'); if (!s) return;
+  if (s.getAttribute('aria-disabled') === 'true') { $('.qv__err').textContent = `Size ${s.dataset.size} is sold out.`; return; }
+  $$('.qv__sizes .size').forEach(b => b.setAttribute('aria-checked', b === s));
+  qvSize = s.dataset.size; $('.qv__err').textContent = '';
+});
+$('.qv__add').addEventListener('click', () => {
+  if (!qvSize) { $('.qv__err').textContent = 'Please select a size.'; $('.qv__sizes').animate?.([{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'translateX(0)' }], { duration: 320 }); return; }
+  const b = $('.qv__add'); if (b.disabled) return;
+  b.classList.add('is-loading'); b.disabled = true;
+  setTimeout(() => {
+    b.classList.remove('is-loading'); b.disabled = false;
+    addToCart(qvId, qvSize); toast(`${PRODUCTS[qvId].name} · ${qvSize} added to bag`);
+    renderCart(); openUI('cart');
+  }, 600);
+});
+$('.qv__wish').addEventListener('click', () => { toggleWish(qvId); const on = wish.includes(qvId); $('.qv__wish').setAttribute('aria-pressed', on); $('.qv__wish span').textContent = on ? 'Saved to wishlist' : 'Save to wishlist'; });
+$('.qv__guide').addEventListener('click', () => { const d = $$('.qv__acc')[2]; d.open = true; d.scrollIntoView({ behavior: 'smooth', block: 'center' }); });
+
+/* ---------------------------------------------------------
    Search
    --------------------------------------------------------- */
 const q = $('#q');
@@ -302,7 +350,7 @@ function renderSearch() {
   const list = Object.values(PRODUCTS).filter(p =>
     !term || [p.name, p.cat, p.sub, COLORS[p.color].name].join(' ').toLowerCase().includes(term));
   $('.search__results').innerHTML = list.length
-    ? list.slice(0, 10).map(p => `<a href="#" class="sr-card"><img src="${p.img.front}" alt="${p.name}" loading="lazy" width="960" height="1280"><p>${p.name}</p><span>${money(p.price)} · ${COLORS[p.color].name}</span></a>`).join('')
+    ? list.slice(0, 10).map(p => `<a href="#" class="sr-card" data-qv="${p.id}"><img src="${p.img.front}" alt="${p.name}" loading="lazy" width="960" height="1280"><p>${p.name}</p><span>${money(p.price)} · ${COLORS[p.color].name}</span></a>`).join('')
     : `<div class="empty"><h3>No results for “${q.value.replace(/</g, '&lt;')}”</h3><p>Try “dress”, “set” or a colour like “olive”.</p></div>`;
 }
 q.addEventListener('input', renderSearch);
@@ -452,7 +500,7 @@ function scrollScenes(gl) {
   // Hero text drifts as the image folds away
   // Hero: the window opens to full bleed, then the next section slides over it
   const frame = $('.hero__frame');
-  const htl = gsap.timeline({ scrollTrigger: { trigger: '.hero', start: 'top top', end: () => '+=' + window.innerHeight, scrub: .8, invalidateOnRefresh: true } });
+  const htl = gsap.timeline({ scrollTrigger: { trigger: '.hero', start: 'top top', end: () => '+=' + window.innerHeight * .6, scrub: .8, invalidateOnRefresh: true } });
   htl.to(frame, { top: 0, bottom: 0, width: () => document.documentElement.clientWidth, ease: 'power2.inOut', duration: 1 }, 0)
      .to('.hero__title .line--a', { xPercent: -60, opacity: 0, ease: 'power2.in', duration: .7 }, 0)
      .to('.hero__title .line--b', { xPercent: 60, opacity: 0, ease: 'power2.in', duration: .7 }, 0)
@@ -490,10 +538,9 @@ function scrollScenes(gl) {
      .to('.editorial__hint', { opacity: 0, duration: .15 }, 0)
      .to('.editorial__text', { opacity: 1, duration: .25 }, .85)
      .fromTo('.editorial__title span', { yPercent: 50 }, { yPercent: 0, stagger: .06, duration: .3, ease: 'power3.out' }, .85)
-     .fromTo('.eshot--a', { yPercent: 70, opacity: 0 }, { yPercent: -10, opacity: 1, duration: .6, ease: 'power2.out' }, .9)
-     .fromTo('.eshot--b', { yPercent: 110, opacity: 0 }, { yPercent: -30, opacity: 1, duration: .6, ease: 'power2.out' }, .98)
-     .fromTo('.eshot--c', { yPercent: 90, opacity: 0 }, { yPercent: -20, opacity: 1, duration: .6, ease: 'power2.out' }, 1.06)
-     .to({}, { duration: .2 });
+     .add(flyIn($$('.editorial__shots .fcard'), true), .9)
+     .add(drift($$('.editorial__shots .fcard'), 70, true), 1.25)
+     .to({}, { duration: .55 });
   setMask(0);
   window.addEventListener('resize', () => { buildMask(); setMask(mz.p); });
 
@@ -566,6 +613,37 @@ function setMask(p) {
   ctx.fillText('Linen', W / 2, base);
 }
 
+/* Floating cards: fly in, drift by depth on scroll, lean toward the pointer */
+function flyIn(cards, asTimeline) {
+  const tl = gsap.timeline({ paused: !asTimeline });
+  cards.forEach((c, i) => {
+    const r = parseFloat(c.dataset.rot || 0), d = parseFloat(c.dataset.depth || 1);
+    tl.fromTo(c, { yPercent: 120 + d * 40, rotation: r * 3, opacity: 0 }, { yPercent: 0, rotation: r, opacity: 1, duration: asTimeline ? .35 : 1.4, ease: 'expo.out' }, i * (asTimeline ? .06 : .12));
+  });
+  return tl;
+}
+function drift(cards, dist, asTimeline) {
+  const tl = gsap.timeline();
+  cards.forEach(c => { const d = parseFloat(c.dataset.depth || 1); tl.to(c, { y: -dist * d, rotation: `+=${(parseFloat(c.dataset.rot || 0) > 0 ? 1 : -1) * 3 * d}`, ease: 'none', duration: asTimeline ? .55 : 1 }, 0); });
+  return tl;
+}
+function pointerLean(zone, cards) {
+  if (!finePointer || !zone) return;
+  const qs = cards.map(c => { const el = c.querySelector('.fcard__in'), d = parseFloat(c.dataset.depth || 1); return { d, x: gsap.quickTo(el, 'x', { duration: 1.2, ease: 'power3' }), y: gsap.quickTo(el, 'y', { duration: 1.2, ease: 'power3' }) }; });
+  zone.addEventListener('pointermove', e => {
+    const r = zone.getBoundingClientRect(); const nx = (e.clientX - r.left) / r.width - .5, ny = (e.clientY - r.top) / r.height - .5;
+    qs.forEach(q => { q.x(nx * 28 * q.d); q.y(ny * 20 * q.d); });
+  });
+  zone.addEventListener('pointerleave', () => qs.forEach(q => { q.x(0); q.y(0); }));
+}
+function flyZone(zone, cards, start = 'top 70%') {
+  if (!zone || !cards.length) return;
+  const intro = flyIn(cards, false);
+  ScrollTrigger.create({ trigger: zone, start, once: true, onEnter: () => intro.play() });
+  gsap.timeline({ scrollTrigger: { trigger: zone, start: 'top bottom', end: 'bottom top', scrub: 1 } }).add(drift(cards, 90, false));
+  pointerLean(zone, cards);
+}
+
 function rollText() {
   $$('.nav--left a, .btn > span, .link--arrow').forEach(el => {
     if (el.querySelector('.roll')) return;
@@ -580,6 +658,10 @@ function rollText() {
 
 function interactions(gl) {
   rollText();
+  pointerLean($('.editorial__pin'), $$('.editorial__shots .fcard'));
+  flyZone($('.linen__fabric'), $$('.linen__fly .fcard'), 'top 75%');
+  flyZone($('.news'), $$('.news__fly .fcard'), 'top 65%');
+  $$('[data-fabric-card]').forEach(b => b.addEventListener('click', () => $(`[data-fabric="${b.dataset.fabricCard}"]`)?.click()));
   // Marquee moves only with the scroll (direction + speed follow the reader)
   const mq = $('.marquee__track');
   if (mq) {
