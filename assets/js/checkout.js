@@ -1,5 +1,5 @@
 // NIZHNIST — Checkout (demo: nothing is sent anywhere)
-import { totals, recommend, SHIPPING, PROMOS } from './totals.js?v=261026103049';
+import { totals, recommend, SHIPPING, PROMOS } from './totals.js?v=261026125231';
 
 export function initCheckout(ctx) {
   const { $, $$, PRODUCTS, COLORS, money, getCart, setCart, addToCart, toast, store, swatchHTML, gsap, reduce } = ctx;

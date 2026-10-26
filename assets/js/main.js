@@ -1,9 +1,9 @@
-import { initShop } from './shop.js?v=261026103049';
-import { initProduct } from './product.js?v=261026103049';
-import { initCart } from './cart.js?v=261026103049';
-import { initCheckout } from './checkout.js?v=261026103049';
-import { initContent } from './content.js?v=261026103049';
-import { PRODUCTS, COLORS, LOOKS, FREE_SHIPPING, money } from './data.js?v=261026103049';
+import { initShop } from './shop.js?v=261026125231';
+import { initProduct } from './product.js?v=261026125231';
+import { initCart } from './cart.js?v=261026125231';
+import { initCheckout } from './checkout.js?v=261026125231';
+import { initContent } from './content.js?v=261026125231';
+import { PRODUCTS, COLORS, LOOKS, FREE_SHIPPING, money } from './data.js?v=261026125231';
 
 const gsap = window.gsap;
 const ScrollTrigger = window.ScrollTrigger;
@@ -174,7 +174,7 @@ function renderCart() {
   const rec = cart.length ? [PAIRS[cart[cart.length - 1].id], ...Object.keys(PRODUCTS)].find(id => id && !inBag.includes(id)) : null;
   $('.upsell').innerHTML = rec ? `<p class="upsell__t">Complete the look</p><button class="upsell__item" data-qv="${rec}"><img src="${PRODUCTS[rec].img.front}" alt="" width="64" height="85"><span><b>${PRODUCTS[rec].name}</b><em>${money(PRODUCTS[rec].price)}</em></span><i>Quick view +</i></button>` : '';
   if (!cart.length) {
-    box.innerHTML = `<div class="empty"><h3>Your bag is empty</h3><p>Linen pieces you add will appear here.</p><a href="#featured" class="btn btn--dark" data-close><span>Explore the collection</span></a></div>`;
+    box.innerHTML = `<div class="empty"><h3>Your bag is empty</h3><p>Linen pieces you add will appear here.</p><a href="shop.html" class="btn btn--dark"><span>Explore the collection</span></a></div>`;
     return;
   }
   box.innerHTML = cart.map((l, i) => {

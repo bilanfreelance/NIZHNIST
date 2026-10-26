@@ -1,5 +1,5 @@
 // NIZHNIST — Shop / catalogue page
-import { CATEGORIES } from './data.js?v=261026103049';
+import { CATEGORIES } from './data.js?v=261026125231';
 
 const COLOR_KEYS = c => (c === 'ivoryChocolate' ? ['ivory', 'chocolate'] : [c]);
 const ORDER = ['zoria', 'mavka', 'kalyna', 'lesya', 'sonia', 'polissia', 'lada', 'vira']; // "Featured"
