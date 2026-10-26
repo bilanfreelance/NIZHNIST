@@ -1,6 +1,9 @@
-import { initShop } from './shop.js';
-import { initProduct } from './product.js';
-import { PRODUCTS, COLORS, LOOKS, FREE_SHIPPING, money } from './data.js';
+import { initShop } from './shop.js?v=261026101638';
+import { initProduct } from './product.js?v=261026101638';
+import { initCart } from './cart.js?v=261026101638';
+import { initCheckout } from './checkout.js?v=261026101638';
+import { initContent } from './content.js?v=261026101638';
+import { PRODUCTS, COLORS, LOOKS, FREE_SHIPPING, money } from './data.js?v=261026101638';
 
 const gsap = window.gsap;
 const ScrollTrigger = window.ScrollTrigger;
@@ -145,7 +148,7 @@ document.addEventListener('click', e => {
 /* ---------------------------------------------------------
    Cart
    --------------------------------------------------------- */
-function saveCart() { store.set('cart', cart); updateCounts(); }
+function saveCart() { store.set('cart', cart); updateCounts(); document.dispatchEvent(new CustomEvent('nz:cart')); }
 function addToCart(id, size, qty = 1) {
   const line = cart.find(l => l.id === id && l.size === size);
   if (line) line.qty += qty; else cart.push({ id, size, qty });
@@ -209,6 +212,7 @@ function toggleWish(id, btn) {
   const on = !wish.includes(id);
   wish = on ? [...wish, id] : wish.filter(x => x !== id);
   store.set('wish', wish);
+  document.dispatchEvent(new CustomEvent('nz:wish'));
   updateCounts(); syncHearts();
   if (btn) { btn.classList.remove('pop'); void btn.offsetWidth; btn.classList.add('pop'); }
   toast(on ? `${PRODUCTS[id].name} saved to wishlist` : `Removed from wishlist`);
@@ -413,10 +417,13 @@ document.addEventListener('click', e => { if (mega && !mega.contains(e.target)) 
 /* ---------------------------------------------------------
    Page modules (shop / product) + page transitions
    --------------------------------------------------------- */
-const ctx = { swatchHTML, $, $$, PRODUCTS, COLORS, SIZES, money, cardHTML, addToCart, renderCart, openUI, closeUI, toast, toggleWish, syncHearts, isWished: id => wish.includes(id), openQV, productURL, gsap, reduce, store };
+const ctx = { getCart: () => cart, setCart: c => { cart = c; saveCart(); }, getWish: () => wish, FREE_SHIPPING, updateCounts, swatchHTML, $, $$, PRODUCTS, COLORS, SIZES, money, cardHTML, addToCart, renderCart, openUI, closeUI, toast, toggleWish, syncHearts, isWished: id => wish.includes(id), openQV, productURL, gsap, reduce, store };
 let pageIntro = null;
 if (PAGE === 'shop') ({ intro: pageIntro } = initShop(ctx) || {});
 if (PAGE === 'product') ({ intro: pageIntro } = initProduct(ctx) || {});
+if (PAGE === 'cart') ({ intro: pageIntro } = initCart(ctx) || {});
+if (PAGE === 'checkout') ({ intro: pageIntro } = initCheckout(ctx) || {});
+if (!['home', 'shop', 'product', 'cart', 'checkout'].includes(PAGE)) initContent(ctx);
 
 document.addEventListener('click', e => {
   const a = e.target.closest('a[href]');

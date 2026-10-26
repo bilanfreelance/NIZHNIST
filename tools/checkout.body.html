@@ -1,0 +1,83 @@
+  <div class="co">
+    <div class="wrap co__wrap">
+      <form class="co-form co-main" novalidate>
+        <nav class="crumbs" aria-label="Breadcrumb"><a href="cart.html">Bag</a><span>/</span><span aria-current="page">Checkout</span></nav>
+        <h1 class="co-title">Check<em>out</em></h1>
+        <ol class="co-prog" aria-label="Steps"><li class="is-on"><span>01</span>Contact</li><li><span>02</span>Delivery</li><li><span>03</span>Payment</li></ol>
+
+        <div class="xpay-row"><p>Express checkout</p><div class="xpays"><button class="xpay" data-name="Apple Pay" type="button"> Pay</button><button class="xpay" data-name="Google Pay" type="button">G Pay</button><button class="xpay" data-name="PayPal" type="button">PayPal</button></div><p class="or"><span>or continue below</span></p></div>
+
+        <section class="co-step" aria-labelledby="s1">
+          <h2 id="s1"><span>01</span>Contact</h2>
+          <div class="fld"><label for="co-email">Email</label><input id="co-email" type="email" autocomplete="email" required data-rule="email"><p class="fld__err" role="alert"></p></div>
+          <label class="chk"><input type="checkbox" checked> <span>Email me about new collections and linen care notes</span></label>
+        </section>
+
+        <section class="co-step" aria-labelledby="s2">
+          <h2 id="s2"><span>02</span>Delivery</h2>
+          <div class="fld"><label for="co-country">Country</label><select id="co-country" autocomplete="country-name" required><option value="">Select…</option><option>Ukraine</option><option>Poland</option><option>Germany</option><option>United Kingdom</option><option>United States</option></select><p class="fld__err" role="alert"></p></div>
+          <div class="fgrid">
+            <div class="fld"><label for="co-fn">First name</label><input id="co-fn" autocomplete="given-name" required><p class="fld__err" role="alert"></p></div>
+            <div class="fld"><label for="co-ln">Last name</label><input id="co-ln" autocomplete="family-name" required><p class="fld__err" role="alert"></p></div>
+          </div>
+          <div class="fld"><label for="co-addr">Address</label><input id="co-addr" autocomplete="street-address" required><p class="fld__err" role="alert"></p></div>
+          <div class="fgrid fgrid--3">
+            <div class="fld"><label for="co-city">City</label><input id="co-city" autocomplete="address-level2" required><p class="fld__err" role="alert"></p></div>
+            <div class="fld"><label for="co-zip">Postal code</label><input id="co-zip" autocomplete="postal-code" required data-rule="postal"><p class="fld__err" role="alert"></p></div>
+            <div class="fld"><label for="co-tel">Phone <small>(for delivery)</small></label><input id="co-tel" type="tel" autocomplete="tel"><p class="fld__err" role="alert"></p></div>
+          </div>
+          <fieldset class="ship-opts"><legend>Shipping method</legend>
+            <label class="ropt"><input type="radio" name="ship" value="standard" checked><span><b>Standard</b><em>3–5 business days</em></span><strong class="ship-standard"></strong></label>
+            <label class="ropt"><input type="radio" name="ship" value="express"><span><b>Express</b><em>1–2 business days</em></span><strong>$19</strong></label>
+          </fieldset>
+        </section>
+
+        <section class="co-step" aria-labelledby="s3">
+          <h2 id="s3"><span>03</span>Payment</h2>
+          <p class="co-demo">Demo checkout — no payment is processed and nothing is sent.</p>
+          <fieldset class="ship-opts"><legend class="sr">Payment method</legend>
+            <label class="ropt"><input type="radio" name="pay" value="card" checked><span><b>Card</b><em>Visa · Mastercard · Amex</em></span></label>
+            <label class="ropt"><input type="radio" name="pay" value="paypal"><span><b>PayPal</b><em>You’ll be redirected after review</em></span></label>
+          </fieldset>
+          <div class="pay-card">
+            <div class="fld"><label for="co-card">Card number</label><input id="co-card" inputmode="numeric" autocomplete="off" placeholder="1234 5678 9012 3456" required data-fmt="card" data-rule="card"><p class="fld__err" role="alert"></p></div>
+            <div class="fgrid">
+              <div class="fld"><label for="co-exp">Expiry</label><input id="co-exp" inputmode="numeric" autocomplete="off" placeholder="MM / YY" required data-fmt="exp" data-rule="exp"><p class="fld__err" role="alert"></p></div>
+              <div class="fld"><label for="co-cvc">CVC</label><input id="co-cvc" inputmode="numeric" autocomplete="off" placeholder="123" required data-fmt="cvc" data-rule="cvc"><p class="fld__err" role="alert"></p></div>
+            </div>
+          </div>
+          <label class="chk"><input type="checkbox"> <span>Add a handwritten gift note (free)</span></label>
+        </section>
+
+        <p class="co-err" role="alert"></p>
+        <button class="btn btn--dark btn--full co-place" type="submit"><span>Place order · <span class="co-total-inline"></span></span></button>
+        <p class="co-legal">By placing your order you agree to our <a href="terms.html">Terms</a> and <a href="privacy.html">Privacy Policy</a>. Free returns within 30 days.</p>
+      </form>
+
+      <aside class="cos" aria-label="Order summary">
+        <button class="cos__toggle" aria-expanded="false" type="button"><span>Order summary</span><b class="co-total-inline"></b></button>
+        <div class="cos__body">
+          <div class="cos__lines"></div>
+          <div class="bump" hidden></div>
+          <form class="cos-promo" novalidate><label for="cpromo" class="sr">Promo code</label><input id="cpromo" placeholder="Promo code"><button class="btn btn--line" type="submit"><span>Apply</span></button></form>
+          <p class="cos-promo__applied" role="status"></p>
+          <div class="sum__row"><span>Subtotal</span><b class="cos__sub"></b></div>
+          <div class="sum__row cos__disc" hidden><span></span><b></b></div>
+          <div class="sum__row"><span>Shipping</span><b class="cos__ship"></b></div>
+          <div class="sum__row sum__row--total"><span>Total</span><b class="cos__total"></b></div>
+          <ul class="sum__perks"><li><b>Free returns</b> within 30 days</li><li><b>Secure payment</b> · SSL encrypted</li></ul>
+        </div>
+      </aside>
+    </div>
+
+    <div class="wrap co-empty"><p class="bag-empty__t">Your bag is <em>empty.</em></p><p>Add a piece or two before checking out.</p><a href="shop.html" class="btn btn--dark"><span>Explore the collection</span></a></div>
+
+    <section class="wrap done" aria-live="polite">
+      <p class="eyebrow">Order <span class="done__no"></span></p>
+      <h1 class="done__t">Thank you — it’s <em>on its way.</em></h1>
+      <p class="done__p">A confirmation is on its way to <b class="done__email"></b>. We’ll email you again when your linen ships.</p>
+      <div class="done__lines"></div>
+      <p class="done__total-row">Total paid <b class="done__total"></b></p>
+      <div class="done__btns"><a href="shop.html" class="btn btn--dark"><span>Continue shopping</span></a><a href="index.html#story" class="btn btn--line"><span>Read our story</span></a></div>
+    </section>
+  </div>

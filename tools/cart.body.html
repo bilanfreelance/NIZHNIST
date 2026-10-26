@@ -1,0 +1,39 @@
+  <section class="page-intro wrap bag-intro">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><span>/</span><a href="shop.html">Shop</a><span>/</span><span aria-current="page">Bag</span></nav>
+    <h1 class="bag-title">Your <em>bag</em> <span class="bag-title__n"></span></h1>
+    <div class="meter"><p class="meter__t"></p><div class="meter__bar"><i></i></div></div>
+  </section>
+
+  <section class="wrap bag">
+    <div class="bag__lines" aria-live="polite"></div>
+    <aside class="sum" aria-label="Order summary">
+      <h2 class="sum__h">Order summary</h2>
+      <div class="sum__row"><span>Subtotal</span><b class="sum__sub"></b></div>
+      <div class="sum__row sum__disc" hidden><span></span><b></b></div>
+      <div class="sum__row"><span>Shipping</span><b class="sum__ship"></b></div>
+      <form class="promo" novalidate>
+        <details><summary>Have a promo code?</summary>
+          <div class="promo__f"><label for="promo" class="sr">Promo code</label><input id="promo" placeholder="e.g. LINEN10" autocomplete="off"><button class="btn btn--line" type="submit"><span>Apply</span></button></div>
+          <p class="promo__msg" role="alert"></p>
+        </details>
+        <div class="promo__applied"></div>
+      </form>
+      <div class="sum__row sum__row--total"><span>Total</span><b class="sum__total"></b></div>
+      <p class="sum__tax">Taxes included where applicable.</p>
+      <a href="checkout.html" class="btn btn--dark btn--full sum__checkout"><span>Secure checkout</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <div class="xpays"><span>or pay with</span><button class="xpay" data-name="Apple Pay" type="button"> Pay</button><button class="xpay" data-name="Google Pay" type="button">G Pay</button><button class="xpay" data-name="PayPal" type="button">PayPal</button></div>
+      <ul class="sum__perks"><li><b>Free returns</b> within 30 days</li><li><b>Secure payment</b> · SSL encrypted</li><li><b>Need help?</b> <a href="contact.html">Contact us</a></li></ul>
+    </aside>
+  </section>
+
+  <section class="wrap bag-rec" aria-label="Complete the look">
+    <div class="ctl__head"><p class="eyebrow">Pairs well with your bag</p><h2 class="h2">Complete the <em>look</em></h2><a href="shop.html" class="link link--arrow">Shop all<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+    <div class="bag-rec__grid"></div>
+  </section>
+
+  <section class="wrap bag-saved" hidden aria-label="Saved for later">
+    <div class="ctl__head"><p class="eyebrow">Your wishlist</p><h2 class="h2">Saved for <em>later</em></h2></div>
+    <div class="bag-saved__grid"></div>
+  </section>
+
+  <div class="undo" role="status"><span class="undo__t"></span><button class="undo__btn">Undo</button></div>

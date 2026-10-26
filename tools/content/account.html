@@ -1,0 +1,19 @@
+<!-- slug: account --><!-- title: Account — NIZHNIST --><!-- desc: Sign in to your NIZHNIST account. -->
+  <section class="page-intro wrap cp-intro">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><span>/</span><span aria-current="page">Account</span></nav>
+    <p class="eyebrow">Welcome</p>
+    <h1 class="cp-title">Your <em>account</em></h1>
+    <p class="cp-lead">Sign in to track orders and keep your wishlist across devices.</p>
+  </section>
+  <section class="wrap acct">
+    <div class="acct__tabs" role="tablist"><button role="tab" aria-selected="true" data-tab="in">Sign in</button><button role="tab" aria-selected="false" data-tab="up">Create account</button></div>
+    <form class="cform acct__form" novalidate data-form="account">
+      <div class="fld acct-up" hidden><label for="a-name">Name</label><input id="a-name" autocomplete="name"><p class="fld__err" role="alert"></p></div>
+      <div class="fld"><label for="a-email">Email</label><input id="a-email" type="email" autocomplete="email" required data-rule="email"><p class="fld__err" role="alert"></p></div>
+      <div class="fld"><label for="a-pass">Password</label><input id="a-pass" type="password" autocomplete="current-password" required data-rule="pass"><p class="fld__err" role="alert"></p></div>
+      <button class="btn btn--dark btn--full" type="submit"><span class="acct__cta">Sign in</span></button>
+      <p class="cform__ok" role="status"></p>
+      <p class="cp-note">Demo — accounts aren’t connected yet. Your bag and wishlist are saved in this browser.</p>
+    </form>
+    <aside class="acct__perks"><h2>Why join</h2><ul><li>Track orders and returns in one place</li><li>Your wishlist on every device</li><li>Early access to new collections</li></ul><a href="wishlist.html" class="link link--arrow">View your wishlist<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></aside>
+  </section>

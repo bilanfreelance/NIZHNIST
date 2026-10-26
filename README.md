@@ -27,7 +27,11 @@ Accessibility: keyboard focus states, Escape/scrim close, focus trap in drawers,
 - `shop.html` — catalogue: category tabs, colour/size filters (drawer on mobile), sorting, 2/4-column density toggle, editorial pause, empty state, recently viewed. Deep-links: `shop.html?cat=Dresses&color=olive&sort=price-asc`
 - `product.html?p=<id>` — product page: four large stacked images + lightbox (keyboard/swipe), sticky purchase panel, size validation, size guide drawer, accordions, complete-your-look, sticky add-to-bag on mobile
 
-`shop.html` and `product.html` share header, drawers and footer with `index.html`; after editing those parts run `python3 tools/build_pages.py`.
+- `cart.html` — bag: free-shipping meter, size/qty edit, remove with undo, save for later, promo codes (demo: LINEN10, WELCOME15), express pay, complete-the-look, saved items
+- `checkout.html` — focused one-page checkout (contact → delivery → payment), inline validation, shipping options, order summary with one-click add-on, confirmation screen. Demo only: nothing is sent.
+- Content: `about.html`, `contact.html`, `faq.html`, `shipping.html`, `size-guide.html`, `care.html`, `wishlist.html`, `account.html`, `privacy.html`, `terms.html`, `404.html`
+
+All pages except `index.html` share header, drawers and footer with `index.html`; after editing those parts run `python3 tools/build_pages.py` (it also stamps a cache-busting version on CSS/JS). Page bodies live in `tools/*.body.html` and `tools/content/*.html`.
 
 ## Structure
 ```

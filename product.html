@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/style.css?v=261026101638">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2366704A'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='20' fill='%23F4F1E9' text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E">
 </head>
 <body data-page="product">
@@ -49,13 +49,13 @@
           </div>
         </div>
       </div>
-      <a href="index.html#story" class="link">Our Story</a>
+      <a href="about.html" class="link">Our Story</a>
     </nav>
     <a href="index.html" class="logo" aria-label="NIZHNIST — home"><svg viewBox="83 226 2744 567" role="img"><use href="#logo"/></svg></a>
     <nav class="nav nav--right" aria-label="Utility">
       <button class="icon-btn" data-open="search" aria-label="Search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg></button>
       <button class="icon-btn" data-open="wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10.1A4.2 4.2 0 0 1 12 7.4a4.2 4.2 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20z"/></svg><span class="badge" data-count="wish">0</span></button>
-      <a class="icon-btn hide-sm" href="#" aria-label="Account"><svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1.2-3.6 4-5.2 7.5-5.2s6.3 1.6 7.5 5.2"/></svg></a>
+      <a class="icon-btn hide-sm" href="account.html" aria-label="Account"><svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1.2-3.6 4-5.2 7.5-5.2s6.3 1.6 7.5 5.2"/></svg></a>
       <button class="icon-btn bag-btn" data-open="cart" aria-label="Bag"><span class="bag-label">Bag</span><span class="bag-count" data-count="cart">0</span></button>
     </nav>
   </div>
@@ -70,9 +70,9 @@
     <a href="shop.html?cat=Shirts" class="mm-sub">Shirts</a>
     <a href="shop.html?cat=Jumpsuits" class="mm-sub">Jumpsuits</a>
     <a href="index.html#lookbook">Lookbook</a>
-    <a href="index.html#story">Our Story</a>
+    <a href="about.html">Our Story</a>
     <a href="#linen">Linen Story</a>
-    <a href="#">Account</a>
+    <a href="account.html">Account</a>
   </nav>
   <p class="mmenu__foot">Made to Feel Free.</p>
 </div>
@@ -170,13 +170,13 @@
       </div>
       <nav class="fpanel__nav" aria-label="Footer">
         <div><h3>Shop</h3><a href="shop.html">All products</a><a href="shop.html?cat=Sets">Sets</a><a href="shop.html?cat=Dresses">Dresses</a><a href="shop.html?cat=Shirts">Shirts</a><a href="shop.html?cat=Jumpsuits">Jumpsuits</a></div>
-        <div><h3>Help</h3><a href="#">Shipping &amp; Returns</a><a href="#">Size Guide</a><a href="#">Care Guide</a><a href="#">FAQ</a><a href="#">Contact</a></div>
+        <div><h3>Help</h3><a href="shipping.html">Shipping &amp; Returns</a><a href="size-guide.html">Size Guide</a><a href="care.html">Care Guide</a><a href="faq.html">FAQ</a><a href="contact.html">Contact</a></div>
       </nav>
       <div class="fpanel__bottom">
         <div class="fpanel__social"><a href="#">Instagram</a><a href="#">Pinterest</a><a href="#">TikTok</a></div>
-        <div class="fpanel__contact"><span class="fpanel__star" aria-hidden="true">✦</span><a href="mailto:hello@nizhnist.com">hello@nizhnist.com</a><a href="#story">Our Story</a></div>
+        <div class="fpanel__contact"><span class="fpanel__star" aria-hidden="true">✦</span><a href="mailto:hello@nizhnist.com">hello@nizhnist.com</a><a href="about.html">Our Story</a></div>
       </div>
-      <div class="fpanel__legal"><a href="#">Privacy Policy</a><a href="#">Terms &amp; Conditions</a><a href="#">Cookies</a></div>
+      <div class="fpanel__legal"><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms &amp; Conditions</a><a href="privacy.html#cookies">Cookies</a></div>
       <div class="fpanel__copy"><span>© 2026 NIZHNIST</span><span>Concept by Valentyn Bilan</span></div>
     </div>
   </div>
@@ -193,7 +193,7 @@
   <footer class="drawer__foot cart__foot">
     <div class="cart__row"><span>Subtotal</span><strong class="cart__subtotal">$0</strong></div>
     <p class="cart__small">Taxes and shipping calculated at checkout.</p>
-    <div class="cart__btns"><a href="#" class="btn btn--line">View bag</a><a href="#" class="btn btn--dark"><span>Checkout</span></a></div>
+    <div class="cart__btns"><a href="cart.html" class="btn btn--line"><span>View bag</span></a><a href="checkout.html" class="btn btn--dark"><span>Checkout</span></a></div>
   </footer>
 </aside>
 
@@ -225,6 +225,7 @@
 <aside class="drawer" id="wishlist" aria-label="Wishlist" aria-hidden="true" tabindex="-1">
   <header class="drawer__head"><h2>Saved <span data-count="wish">0</span></h2><button class="icon-btn" data-close aria-label="Close wishlist"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
   <div data-lenis-prevent class="drawer__body wish__items"></div>
+  <footer class="drawer__foot"><a href="wishlist.html" class="btn btn--line btn--full"><span>View wishlist page</span></a></footer>
 </aside>
 
 <aside class="drawer drawer--look" id="look" aria-label="Shop the look" aria-hidden="true" tabindex="-1">
@@ -275,6 +276,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
-<script type="module" src="assets/js/main.js"></script>
+<script type="module" src="assets/js/main.js?v=261026101638"></script>
 </body>
 </html>
