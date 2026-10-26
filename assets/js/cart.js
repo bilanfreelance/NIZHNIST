@@ -1,5 +1,5 @@
 // NIZHNIST — Bag page
-import { totals, recommend, PROMOS } from './totals.js?v=261026102107';
+import { totals, recommend, PROMOS } from './totals.js?v=261026102506';
 
 export function initCart(ctx) {
   const { $, $$, PRODUCTS, COLORS, SIZES, money, cardHTML, toast, getCart, setCart, getWish, toggleWish, swatchHTML, productURL, store, gsap, reduce, FREE_SHIPPING } = ctx;

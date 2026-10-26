@@ -1,9 +1,9 @@
-import { initShop } from './shop.js?v=261026102107';
-import { initProduct } from './product.js?v=261026102107';
-import { initCart } from './cart.js?v=261026102107';
-import { initCheckout } from './checkout.js?v=261026102107';
-import { initContent } from './content.js?v=261026102107';
-import { PRODUCTS, COLORS, LOOKS, FREE_SHIPPING, money } from './data.js?v=261026102107';
+import { initShop } from './shop.js?v=261026102506';
+import { initProduct } from './product.js?v=261026102506';
+import { initCart } from './cart.js?v=261026102506';
+import { initCheckout } from './checkout.js?v=261026102506';
+import { initContent } from './content.js?v=261026102506';
+import { PRODUCTS, COLORS, LOOKS, FREE_SHIPPING, money } from './data.js?v=261026102506';
 
 const gsap = window.gsap;
 const ScrollTrigger = window.ScrollTrigger;
