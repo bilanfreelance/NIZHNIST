@@ -1703,12 +1703,4 @@ body[data-page="checkout"] .footer{padding-top:28px}
 .co-prog li:hover{color:var(--ink)}
 .co-place.is-ready{background:var(--olive)}
 
-/* Wordmark — Cinzel, as on the garment label */
-.wordmark{display:block;font-family:'Cinzel',Georgia,serif;font-weight:600;text-transform:uppercase;letter-spacing:.11em;line-height:1;white-space:nowrap;color:currentColor}
-.logo{width:auto!important}
-.logo .wordmark{font-size:clamp(22px,1.9vw,30px);margin-right:-.11em}
-.loader__logo .wordmark{font-size:clamp(44px,8.6vw,104px);text-align:center;margin-right:-.11em}
-.loader__inner{width:auto}
-.pt .wordmark{font-size:clamp(28px,4vw,48px);color:var(--ink);opacity:.9}
-.fpanel__logo{width:auto}
-.fpanel__logo .wordmark{font-size:clamp(30px,2.8vw,48px)}
+
