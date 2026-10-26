@@ -120,7 +120,7 @@ export class GL {
   }
 
   resize() {
-    this.W = window.innerWidth; this.H = window.innerHeight;
+    this.W = document.documentElement.clientWidth; this.H = window.innerHeight;
     this.renderer.setSize(this.W, this.H, false);
     this.camera.aspect = this.W / this.H;
     this.camera.fov = 2 * Math.atan(this.H / 2 / this.camera.position.z) * 180 / Math.PI;

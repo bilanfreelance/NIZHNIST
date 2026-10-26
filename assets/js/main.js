@@ -414,7 +414,18 @@ function splitHeadings() {
     h.setAttribute('aria-label', text);
     h.innerHTML = text.split(' ').map(w => `<span class="split-line" aria-hidden="true"><span>${w}</span></span>`).join(' ') + supHTML;
   });
-  $$('[data-words]').forEach(p => { p.innerHTML = p.textContent.split(' ').map(w => `<span class="w">${w}</span>`).join(' '); });
+  $$('[data-words]').forEach(p => {
+    // split text nodes into words, keep inline images / emphasis intact
+    const walk = node => [...node.childNodes].forEach(n => {
+      if (n.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach(t => { if (!t) return; if (/^\s+$/.test(t)) frag.append(t); else { const s = document.createElement('span'); s.className = 'w'; s.textContent = t; frag.append(s); } });
+        n.replaceWith(frag);
+      } else if (n.nodeType === 1 && !n.classList.contains('inl')) walk(n);
+    });
+    walk(p);
+    $$('.w', p).forEach(w => w.setAttribute('aria-hidden', 'true'));
+  });
   $$('.hero__title .ln').forEach(l => { l.innerHTML = [...l.textContent].map(c => `<span class="ch">${c === ' ' ? '&nbsp;' : c}</span>`).join(''); });
 }
 
@@ -530,7 +541,17 @@ function scrollScenes(gl) {
 
   // Statement: words fill in as you read
   gsap.to('.statement__big .w', { opacity: 1, stagger: .05, ease: 'none', scrollTrigger: { trigger: '.statement__big', start: 'top 78%', end: 'bottom 45%', scrub: true } });
-  $$('[data-speed]').forEach(el => gsap.to(el, { yPercent: parseFloat(el.dataset.speed) * 100, ease: 'none', scrollTrigger: { trigger: '.statement', start: 'top bottom', end: 'bottom top', scrub: true } }));
+  // Details: scattered frames drift at different depths
+  [['.details__item:nth-of-type(1)', -60], ['.details__item:nth-of-type(2)', 40], ['.details__item:nth-of-type(3)', -110], ['.details__item:nth-of-type(4)', 70], ['.details__title', -30]].forEach(([s, d]) => {
+    const el = $('.details--scatter ' + s); if (!el) return;
+    gsap.fromTo(el, { y: -d }, { y: d, ease: 'none', scrollTrigger: { trigger: '.details--scatter', start: 'top bottom', end: 'bottom top', scrub: .6 } });
+  });
+  // Inline images open up inside the sentence as you read
+  $$('.statement__big .inl').forEach((el, i) => {
+    gsap.timeline({ scrollTrigger: { trigger: el, start: 'top 85%', end: 'top 45%', scrub: .8 } })
+      .fromTo(el, { width: 0 }, { width: () => el.dataset.w || '1.9em', ease: 'power2.inOut' }, 0)
+      .fromTo($('img', el), { scale: 1.35 }, { scale: 1, ease: 'power2.out' }, 0);
+  });
 
   // Editorial: zoom through the letters of “Linen” into the image
   buildMask();
@@ -662,7 +683,6 @@ function interactions(gl) {
   rollText();
   pointerLean($('.editorial__pin'), $$('.editorial__shots .fcard'));
   flyZone($('.linen__fabric'), $$('.linen__fly .fcard'), 'top 75%');
-  flyZone($('.news'), $$('.news__fly .fcard'), 'top 65%');
   $$('[data-fabric-card]').forEach(b => b.addEventListener('click', () => $(`[data-fabric="${b.dataset.fabricCard}"]`)?.click()));
   // Marquee moves only with the scroll (direction + speed follow the reader)
   const mq = $('.marquee__track');

@@ -107,16 +107,16 @@
 
   <!-- BRAND STATEMENT -->
   <section class="statement section" id="story">
-    <div class="wrap statement__grid">
-      <div class="statement__text">
-        <p class="eyebrow" data-reveal><span class="num">(02)</span>Our story</p>
-        <p class="statement__big" data-words>Natural fabrics. Considered silhouettes. A little more room to breathe. NIZHNIST is linen made in Ukraine for women who move through the day with quiet confidence.</p>
+    <div class="wrap statement__wrap">
+      <p class="eyebrow" data-reveal><span class="num">(02)</span>Our story</p>
+      <p class="statement__big" data-words aria-label="Natural fabrics, considered silhouettes — a little more room to breathe. Linen made in Ukraine for women who move through the day with quiet confidence.">Natural fabrics <span class="inl" aria-hidden="true"><img src="assets/img/decor/linen-ivory.webp" alt="" loading="lazy" width="960" height="1280"></span> considered silhouettes <span class="inl" aria-hidden="true"><img src="assets/img/products/p8-alt.webp" alt="" loading="lazy" width="960" height="1280"></span> — a little more room to breathe. Linen made in Ukraine <span class="inl" aria-hidden="true"><img src="assets/img/decor/courtyard.webp" alt="" loading="lazy" width="960" height="1280"></span> for women who move through the day <span class="inl" aria-hidden="true"><img src="assets/img/products/p3-alt.webp" alt="" loading="lazy" width="960" height="1280"></span> with quiet <em>confidence.</em></p>
+      <div class="statement__foot">
+        <ul class="statement__facts" data-reveal>
+          <li><span>01</span>Designed in Ukraine</li>
+          <li><span>02</span>Natural fabrics</li>
+          <li><span>03</span>Relaxed silhouettes</li>
+        </ul>
         <a href="#" class="link link--arrow" data-reveal>Read our story<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-      </div>
-      <div class="statement__media">
-        <figure class="statement__main media" data-gl data-par="0.12"><img src="assets/img/decor/courtyard.webp" alt="Stone courtyard with a ceramic vase, olive branches and draped ivory linen" width="960" height="1280" loading="lazy"></figure>
-        <figure class="statement__float statement__float--a media" data-gl data-speed="-0.18"><img src="assets/img/decor/olive-bowl.webp" alt="Olive branch resting in a travertine bowl in the sun" width="960" height="1280" loading="lazy"></figure>
-        <figure class="statement__float statement__float--b media" data-gl data-speed="0.14"><img src="assets/img/decor/travertine.webp" alt="Travertine block with soft leaf shadows" width="960" height="1280" loading="lazy"></figure>
       </div>
     </div>
   </section>
@@ -224,7 +224,8 @@
         </ol>
       </div>
     </div>
-    <div class="wrap details">
+    <div class="wrap details details--scatter">
+      <h3 class="details__title" aria-hidden="true">Made in<br>the <em>details.</em></h3>
       <figure class="details__item"><div class="media" data-gl data-par="0.08"><img src="assets/img/decor/blouse-buttons.webp" alt="Close-up of a linen blouse with buttons and a gathered neckline" width="960" height="1280" loading="lazy"></div><figcaption><span>Detail 01</span>Gathered neckline</figcaption></figure>
       <figure class="details__item details__item--wide"><div class="media" data-gl data-par="0.08"><img src="assets/img/decor/linen-olive.webp" alt="Close-up of washed olive linen folds" width="1254" height="1254" loading="lazy"></div><figcaption><span>Detail 02</span>Washed texture</figcaption></figure>
       <figure class="details__item"><div class="media" data-gl data-par="0.08"><img src="assets/img/decor/gathered-waist.webp" alt="Close-up of a linen jumpsuit waistband with gathers" width="960" height="1280" loading="lazy"></div><figcaption><span>Detail 03</span>Soft gathers</figcaption></figure>
@@ -233,19 +234,15 @@
   </section>
 
   <!-- NEWSLETTER -->
-  <section class="news section" data-flyzone>
-    <div class="news__fly" aria-hidden="true">
-      <figure class="fcard nc1" data-depth="1.2" data-rot="-8"><div class="fcard__in"><img src="assets/img/decor/palm-shadow.webp" alt="" width="960" height="1280" loading="lazy"><figcaption><b>Letter No. 01</b><span>Summer light</span></figcaption></div></figure>
-      <figure class="fcard nc2" data-depth="0.8" data-rot="6"><div class="fcard__in"><img src="assets/img/decor/sleeve-light.webp" alt="" width="960" height="1280" loading="lazy"><figcaption><b>Letter No. 02</b><span>Care notes</span></figcaption></div></figure>
-      <figure class="fcard nc3" data-depth="1.5" data-rot="-4"><div class="fcard__in"><img src="assets/img/decor/olive-bowl.webp" alt="" width="960" height="1280" loading="lazy"><figcaption><b>Letter No. 03</b><span>The atelier</span></figcaption></div></figure>
-      <figure class="fcard nc4" data-depth="1" data-rot="7"><div class="fcard__in"><img src="assets/img/decor/travertine.webp" alt="" width="960" height="1280" loading="lazy"><figcaption><b>Letter No. 04</b><span>New season</span></figcaption></div></figure>
-    </div>
-    <div class="wrap news__grid">
+  <section class="news" aria-label="Newsletter">
+    <div class="news__bg media" data-gl data-par="0.1" data-focus="0.5,0.5"><img src="assets/img/decor/architecture.webp" alt="Sunlit Mediterranean courtyard with leaf shadows on warm walls" width="1672" height="941" loading="lazy"></div>
+    <div class="news__shade" aria-hidden="true"></div>
+    <div class="wrap news__inner">
       <div class="news__copy">
         <p class="eyebrow" data-reveal><span class="num">(07)</span>Letters from NIZHNIST</p>
         <h2 class="h2 h2--news" data-split>Slow news, once a month.</h2>
-        <p data-reveal>New collections, behind-the-scenes from our atelier and linen care notes. No noise — just the things worth opening.</p>
-        <form class="news__form" novalidate data-reveal>
+        <p class="news__lead" data-reveal>A letter from the sunny side of linen — new pieces before anyone else, notes from our atelier and small rituals for slower days.</p>
+        <form class="news__form" novalidate>
           <label for="nl-email" class="sr">Email address</label>
           <div class="field">
             <input id="nl-email" type="email" name="email" placeholder="Your email address" autocomplete="email" required>
@@ -254,7 +251,9 @@
           <p class="field__msg" role="status" aria-live="polite"></p>
           <p class="news__small">By subscribing you agree to our Privacy Policy. Unsubscribe anytime.</p>
         </form>
+        <ul class="news__perks" data-reveal><li>Early access to new collections</li><li>Linen care notes</li><li>No noise, ever</li></ul>
       </div>
+      <blockquote class="news__quote" data-reveal><p>“Linen remembers<br>the shape of your <em>summer.</em>”</p><cite>— NIZHNIST atelier</cite></blockquote>
     </div>
   </section>
 </main>
@@ -263,11 +262,11 @@
   <div class="wrap footer__grid">
     <a href="#" class="fshot" data-qv="mavka">
       <p class="fshot__label"><b>[ The Olive Dress ]</b><span>Linen — $139 <i>↓</i></span></p>
-      <div class="fshot__img"><img src="assets/img/products/p5-front.webp" alt="The Olive Dress — olive linen sleeveless dress" width="960" height="1280" loading="lazy"></div>
+      <div class="fshot__img"><span class="fshot__qv">Quick view<i>+</i></span><img src="assets/img/products/p5-front.webp" alt="The Olive Dress — olive linen sleeveless dress" width="960" height="1280" loading="lazy"></div>
     </a>
     <a href="#" class="fshot" data-qv="kalyna">
       <p class="fshot__label"><b>[ The Sand Wrap Dress ]</b><span>Linen — $155 <i>↓</i></span></p>
-      <div class="fshot__img"><img src="assets/img/products/p7-front.webp" alt="The Sand Wrap Dress — sand linen wrap shirt dress" width="960" height="1280" loading="lazy"></div>
+      <div class="fshot__img"><span class="fshot__qv">Quick view<i>+</i></span><img src="assets/img/products/p7-front.webp" alt="The Sand Wrap Dress — sand linen wrap shirt dress" width="960" height="1280" loading="lazy"></div>
     </a>
     <div class="fpanel">
       <div class="fpanel__top">
