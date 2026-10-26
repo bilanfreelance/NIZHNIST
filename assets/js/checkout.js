@@ -1,5 +1,5 @@
 // NIZHNIST — Checkout (demo: nothing is sent anywhere)
-import { totals, recommend, SHIPPING, PROMOS } from './totals.js?v=261026101638';
+import { totals, recommend, SHIPPING, PROMOS } from './totals.js?v=261026101920';
 
 export function initCheckout(ctx) {
   const { $, $$, PRODUCTS, COLORS, money, getCart, setCart, addToCart, toast, store, swatchHTML, gsap, reduce } = ctx;
@@ -23,16 +23,16 @@ export function initCheckout(ctx) {
     $('.ship-standard').textContent = t.free ? 'Free' : money(SHIPPING.standard.price);
     // one-click add-on
     const add = recommend(ctx, 1)[0];
-    $('.bump').hidden = !add;
+    $('.co-bump').hidden = !add;
     if (add) {
       const p = PRODUCTS[add]; const sz = ['S', 'M', 'XS', 'L'].find(s => p.sizes[s]);
-      $('.bump').innerHTML = `<img src="${p.img.front}" alt="" width="64" height="85"><span><em>Complete the look</em><b>${p.name}</b><small>${money(p.price)} · size</small> <select class="bump__size" aria-label="Size">${['XS', 'S', 'M', 'L'].map(s => `<option ${s === sz ? 'selected' : ''} ${p.sizes[s] ? '' : 'disabled'}>${s}</option>`).join('')}</select></span><button type="button" class="bump__add" data-id="${add}">Add +</button>`;
+      $('.co-bump').innerHTML = `<img src="${p.img.front}" alt="" width="64" height="85"><span><em>Complete the look</em><b>${p.name}</b><small>${money(p.price)} · size</small> <select class="co-bump__size" aria-label="Size">${['XS', 'S', 'M', 'L'].map(s => `<option ${s === sz ? 'selected' : ''} ${p.sizes[s] ? '' : 'disabled'}>${s}</option>`).join('')}</select></span><button type="button" class="co-bump__add" data-id="${add}">Add +</button>`;
     }
     $('.cos-promo__applied').textContent = t.code ? `✓ ${t.code} applied — ${t.promo.label}` : '';
   }
-  $('.bump').addEventListener('click', e => {
-    const b = e.target.closest('.bump__add'); if (!b) return;
-    addToCart(b.dataset.id, $('.bump__size').value); toast(`${PRODUCTS[b.dataset.id].name} added to your order`);
+  $('.co-bump').addEventListener('click', e => {
+    const b = e.target.closest('.co-bump__add'); if (!b) return;
+    addToCart(b.dataset.id, $('.co-bump__size').value); toast(`${PRODUCTS[b.dataset.id].name} added to your order`);
   });
   $('.cos-promo').addEventListener('submit', e => {
     e.preventDefault(); const v = $('.cos-promo input').value.trim().toUpperCase();

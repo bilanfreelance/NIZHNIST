@@ -1,5 +1,5 @@
 // NIZHNIST — Product detail page
-import { INFO, SIZE_CHART } from './data.js?v=261026101638';
+import { INFO, SIZE_CHART } from './data.js?v=261026101920';
 
 export function initProduct(ctx) {
   const { swatchHTML, $, $$, PRODUCTS, COLORS, SIZES, money, cardHTML, addToCart, renderCart, openUI, toast, toggleWish, isWished, gsap, reduce, store, productURL } = ctx;

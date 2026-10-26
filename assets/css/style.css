@@ -1554,15 +1554,15 @@ body[data-page="checkout"] .footer{padding-top:28px}
 .cos__meta em{font-style:normal;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
 .cos__meta .swatch{width:10px;height:10px}
 .cos__p{font-size:14px}
-.bump{display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:center;margin:14px 0;padding:12px;border:1px dashed #C9C3AF;background:var(--ivory)}
-.bump img{width:52px;aspect-ratio:3/4;object-fit:cover}
-.bump span{display:flex;flex-direction:column;font-size:13px}
-.bump em{font-style:normal;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--olive)}
-.bump b{font-weight:600}
-.bump small{font-size:12px;color:var(--muted);display:inline}
-.bump select{width:60px;height:28px;margin-top:4px;border:1px solid var(--line);background:transparent;font:inherit;font-size:12px}
-.bump__add{height:var(--chip-h);padding:0 14px;background:var(--ink);color:var(--ivory);font-size:12px;font-weight:600;border-radius:2px;transition:background-color .3s}
-.bump__add:hover{background:var(--olive)}
+.co-bump{display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:center;margin:14px 0;padding:12px;border:1px dashed #C9C3AF;background:var(--ivory)}
+.co-bump img{width:52px;aspect-ratio:3/4;object-fit:cover}
+.co-bump span{display:flex;flex-direction:column;font-size:13px}
+.co-bump em{font-style:normal;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--olive)}
+.co-bump b{font-weight:600}
+.co-bump small{font-size:12px;color:var(--muted);display:inline}
+.co-bump select{width:60px;height:28px;margin-top:4px;border:1px solid var(--line);background:transparent;font:inherit;font-size:12px}
+.co-bump__add{height:var(--chip-h);padding:0 14px;background:var(--ink);color:var(--ivory);font-size:12px;font-weight:600;border-radius:2px;transition:background-color .3s}
+.co-bump__add:hover{background:var(--olive)}
 .cos-promo__applied{font-size:12px;color:var(--olive);min-height:18px;margin:6px 0}
 .co-empty,.done{display:none}
 .co.is-empty .co__wrap{display:none}
