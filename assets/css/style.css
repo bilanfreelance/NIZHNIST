@@ -737,3 +737,24 @@ a:hover > .roll > span,button:hover > .roll > span,.btn:hover .roll > span{trans
 @media (max-width:900px){.grid--featured .card__idx{font-size:64px}}
 @media (prefers-reduced-motion:reduce){.hero{height:auto}.hero__sticky{position:relative}.featured{margin-top:0}.editorial{height:auto}.editorial__mask{display:none}.editorial__text{opacity:1;position:relative;min-height:70vh}}
 .editorial__title,.editorial__text .eyebrow{text-shadow:0 2px 40px rgba(34,35,29,.28)}
+
+/* Editorial final frame: lookbook shots layered over the olive linen */
+.editorial__shots{position:absolute;inset:0;z-index:3;pointer-events:none}
+.eshot{position:absolute;margin:0;width:clamp(140px,15vw,280px);opacity:0}
+.eshot img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block}
+.eshot figcaption{margin-top:10px;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ivory)}
+.eshot--a{left:var(--gutter);top:56%}
+.eshot--b{right:calc(var(--gutter) + 4vw);top:12%;width:clamp(120px,12vw,220px)}
+.eshot--c{right:var(--gutter);top:62%;width:clamp(110px,10vw,190px)}
+.editorial__text{z-index:4}
+.editorial__title,.editorial__text .eyebrow{color:#F4F1E9}
+@media (max-width:900px){.eshot--a{top:66%;width:34vw}.eshot--b{top:14%;width:28vw;right:var(--gutter)}.eshot--c{display:none}}
+@media (prefers-reduced-motion:reduce){.eshot{opacity:1}}
+.eshot--a{top:64%}.eshot--b{top:16%}
+/* Details: all four images share one height */
+.details{align-items:start}
+.details__item .media,.details__item--wide .media{aspect-ratio:auto;height:clamp(240px,26vw,520px)}
+@media (max-width:900px){.details__item .media{height:56vw}.details__item--wide .media{height:52vw}}
+/* Minimal cursor label */
+.cursor{width:auto;height:auto;margin:0;border-radius:0;background:rgba(255,255,255,.92);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:var(--ink);display:flex;align-items:center;gap:8px;padding:7px 11px 7px 9px;font-family:var(--ff);font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;transform-origin:0 50%}
+.cursor::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--olive)}

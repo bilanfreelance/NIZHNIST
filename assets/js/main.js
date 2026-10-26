@@ -490,7 +490,10 @@ function scrollScenes(gl) {
      .to('.editorial__hint', { opacity: 0, duration: .15 }, 0)
      .to('.editorial__text', { opacity: 1, duration: .25 }, .85)
      .fromTo('.editorial__title span', { yPercent: 50 }, { yPercent: 0, stagger: .06, duration: .3, ease: 'power3.out' }, .85)
-     .to({}, { duration: .45 });
+     .fromTo('.eshot--a', { yPercent: 70, opacity: 0 }, { yPercent: -10, opacity: 1, duration: .6, ease: 'power2.out' }, .9)
+     .fromTo('.eshot--b', { yPercent: 110, opacity: 0 }, { yPercent: -30, opacity: 1, duration: .6, ease: 'power2.out' }, .98)
+     .fromTo('.eshot--c', { yPercent: 90, opacity: 0 }, { yPercent: -20, opacity: 1, duration: .6, ease: 'power2.out' }, 1.06)
+     .to({}, { duration: .2 });
   setMask(0);
   window.addEventListener('resize', () => { buildMask(); setMask(mz.p); });
 
@@ -620,11 +623,18 @@ function interactions(gl) {
   if (finePointer) {
     const cur = $('.cursor');
     const cx = gsap.quickTo(cur, 'x', { duration: .45, ease: 'power3' }), cy = gsap.quickTo(cur, 'y', { duration: .45, ease: 'power3' });
-    window.addEventListener('pointermove', e => { cx(e.clientX); cy(e.clientY); }, { passive: true });
-    $$('.card__link').forEach(l => {
-      l.addEventListener('mouseenter', () => gsap.to(cur, { scale: 1, opacity: 1, duration: .4, ease: 'power3.out' }));
-      l.addEventListener('mouseleave', () => gsap.to(cur, { scale: 0, opacity: 0, duration: .3 }));
-    });
+    window.addEventListener('pointermove', e => { cx(e.clientX + 16); cy(e.clientY + 16); }, { passive: true });
+    // Show the label only while the pointer is really over a product image (also re-checked on scroll)
+    let px = -1, py = -1, shown = false;
+    const check = () => {
+      if (px < 0) return;
+      const el = document.elementFromPoint(px, py);
+      const on = !!el?.closest('.card__link') && !openPanel;
+      if (on !== shown) { shown = on; gsap.to(cur, on ? { scale: 1, opacity: 1, duration: .4, ease: 'power3.out' } : { scale: 0, opacity: 0, duration: .3 }); }
+    };
+    window.addEventListener('pointermove', e => { px = e.clientX; py = e.clientY; check(); }, { passive: true });
+    lenis.on('scroll', check);
+    document.addEventListener('pointerleave', () => { px = -1; if (shown) { shown = false; gsap.to(cur, { scale: 0, opacity: 0, duration: .3 }); } });
   }
 
   // Magnetic primary CTA

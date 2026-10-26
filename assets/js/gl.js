@@ -25,17 +25,13 @@ vec2 cover(vec2 uv, vec2 res, vec2 img, vec2 f){
 }`;
 
 const IMAGE_VERT = /* glsl */`
-uniform float uVel;
 varying vec2 vUv;
 void main(){
   vUv = uv;
-  vec3 p = position;
-  float b = sin(uv.x*3.14159265);
-  p.y -= b*uVel*.0007;
-  p.z -= b*sin(uv.y*3.14159265)*abs(uVel)*1.2;
-  gl_Position = projectionMatrix*modelViewMatrix*vec4(p,1.);
+  gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.);
 }`;
 
+// Stable image shader: cover-fit, clean wipe reveal, calm crossfade on hover. No distortion.
 const IMAGE_FRAG = /* glsl */`
 uniform sampler2D uTex; uniform sampler2D uTex2;
 uniform vec2 uRes; uniform vec2 uImg; uniform vec2 uImg2; uniform vec2 uFocus; uniform vec2 uMouse;
@@ -46,97 +42,41 @@ ${NOISE}
 void main(){
   if (1. - vUv.y > uClip) discard;
   vec2 uv = vUv;
-  float aspect = uRes.x/uRes.y;
-  float n = snoise(uv*vec2(3.*aspect,3.) + uTime*.04)*.5+.5;
-
-  #ifdef HERO
-  float z = 1.;
-#else
-  float z = 1. + uZoom + uHover*.045 + (1.-uReveal)*.05;
-#endif
+  float r = smoothstep(0., 1., uReveal);
+  float z = 1. + uZoom + uHover*.04 + (1.-r)*.08;
   vec2 zuv = (uv-.5)/z + .5;
   zuv.y += uPar;
-
-
-  // hover: second angle unfolds from the cursor with a soft fabric edge
-  float d = distance(vec2(uv.x*aspect, uv.y), vec2(uMouse.x*aspect, uMouse.y));
-  float rad = uHover*1.7*max(aspect,1.);
-  float edge = d + n*.32 - rad;
-  float inside = (1.-smoothstep(-.14, 0., edge))*uHas2;
-  float ring = (1.-smoothstep(0., .14, abs(edge+.07)))*uHas2*step(.001,uHover)*(1.-uHover*.6);
-  vec2 duv = zuv + (uv-uMouse)*ring*.05;
-
-  vec3 c = texture2D(uTex, cover(clamp(duv,0.,1.), uRes, uImg, uFocus)).rgb;
-  if(uHas2 > .5){
-    vec3 c2 = texture2D(uTex2, cover(clamp(duv,0.,1.), uRes, uImg2, vec2(.5))).rgb;
-    c = mix(c, c2, inside);
+  zuv = clamp(zuv, 0., 1.);
+  vec3 c = texture2D(uTex, cover(zuv, uRes, uImg, uFocus)).rgb;
+  if (uHas2 > .5){
+    vec3 c2 = texture2D(uTex2, cover(zuv, uRes, uImg2, vec2(.5))).rgb;
+    c = mix(c, c2, smoothstep(.05, .95, uHover));
   }
-
-  // reveal: a woven, irregular edge — like linen threads
-  float weave = sin(uv.x*uRes.x*.45)*sin(uv.y*uRes.y*.45)*.5+.5;
-  float t = uReveal*1.3 - .15;
 #ifdef HERO
-  float val = abs(uv.x-.5)*1.25 + n*.22;
+  float a = step(abs(uv.x-.5)*2., uReveal*1.001);
 #else
-  float val = uv.y*.78 + n*.22;
+  float a = step(uv.y, uReveal*1.001);
 #endif
-  val += weave*.035;
-  float a = 1. - smoothstep(t-.1, t, val);
-  float glow = smoothstep(t-.1, t-.04, val)*a;
-  c = mix(c, c*vec3(1.05,1.,.92) + .04, glow);
-
   gl_FragColor = vec4(c, a);
 }`;
 
 const FABRIC_VERT = /* glsl */`
-uniform float uTime, uPress;
-uniform vec2 uMouse, uRes, uDrag;
-varying vec2 vUv; varying vec3 vPos; varying float vH;
-${NOISE}
-float height(vec2 uv){
-  float t = uTime;
-  float h = sin(uv.x*8. + snoise(uv*1.4 + t*.06)*2.6 + t*.55)*.5;
-  h += snoise(vec2(uv.x*2.2, uv.y*2.2 - t*.22))*.65;
-  h += sin(uv.y*4.5 - t*.9 + uv.x*2.)*.22;
-  return h;
-}
-void main(){
-  vUv = uv;
-  vec3 p = position;
-  float amp = min(uRes.x, uRes.y)*.032;
-  float h = height(uv);
-  vec2 d = (uv-uMouse)*vec2(uRes.x/uRes.y, 1.);
-  float m = exp(-dot(d,d)*14.)*uPress;
-  h += m*2.2;
-  p.xy += uDrag*m*.06;
-  p.z = h*amp;
-  vH = h;
-  vec4 mv = modelViewMatrix*vec4(p,1.);
-  vPos = mv.xyz;
-  gl_Position = projectionMatrix*mv;
-}`;
+varying vec2 vUv;
+void main(){ vUv = uv; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.); }`;
 
 const FABRIC_FRAG = /* glsl */`
 uniform sampler2D uTex0; uniform sampler2D uTex1;
-uniform vec2 uRes, uImg0, uImg1;
-uniform float uMix, uReveal, uTime;
-varying vec2 vUv; varying vec3 vPos; varying float vH;
+uniform vec2 uRes, uImg0, uImg1, uMouse;
+uniform float uMix, uReveal, uTime, uPress;
+varying vec2 vUv;
 ${NOISE}
 void main(){
-  vec3 N = normalize(cross(dFdx(vPos), dFdy(vPos)));
-  vec3 L = normalize(vec3(-.45,.65,.9));
-  float diff = clamp(dot(N,L), 0., 1.);
-  vec2 uv = (vUv-.5)/1.06+.5;
+  float r = smoothstep(0., 1., uReveal);
+  vec2 uv = (vUv-.5)/(1.02 + (1.-r)*.08) + .5;
   vec3 c0 = texture2D(uTex0, cover(uv, uRes, uImg0, vec2(.5))).rgb;
   vec3 c1 = texture2D(uTex1, cover(uv, uRes, uImg1, vec2(.5))).rgb;
-  float n = snoise(vUv*3.5 + uTime*.05)*.5+.5;
-  float k = smoothstep(n-.08, n+.08, uMix*1.2-.1);
-  vec3 c = mix(c0, c1, k);
-  c *= .74 + .4*diff;
-  c += vec3(1.,.9,.75)*pow(diff, 18.)*.06;
-  float t = uReveal*1.3-.15;
-  float val = (1.-vUv.y)*.78 + n*.22;
-  float a = 1.-smoothstep(t-.1, t, val);
+  vec3 c = mix(c0, c1, smoothstep(0., 1., uMix));
+  float a = step(vUv.y, uReveal*1.001);
   gl_FragColor = vec4(c, a);
 }`;
 
@@ -158,8 +98,8 @@ export class GL {
     this.vel = 0;
     this.mouse = { x: -9999, y: -9999, px: 0, py: 0 };
     this.onProgress = onProgress;
-    this.geoImg = new THREE.PlaneGeometry(1, 1, 24, 24);
-    this.geoFabric = new THREE.PlaneGeometry(1, 1, 160, 160);
+    this.geoImg = new THREE.PlaneGeometry(1, 1, 1, 1);
+    this.geoFabric = this.geoImg;
     this.resize();
     window.addEventListener('resize', () => this.resize());
     window.addEventListener('pointermove', e => { this.mouse.x = e.clientX; this.mouse.y = e.clientY; }, { passive: true });
@@ -259,10 +199,9 @@ export class GL {
     it.u.uMix.value = 0;
     it.current = index;
     gsap.to(it.u.uMix, {
-      value: 1, duration: 1.3, ease: 'power2.inOut',
+      value: 1, duration: .9, ease: 'power2.inOut',
       onComplete: () => { it.u.uTex0.value = t; it.u.uImg0.value.set(t.image.width, t.image.height); it.u.uMix.value = 0; },
     });
-    it.press = 1.6; // a little wave on change
   }
 
   // Upload every texture and compile shaders up-front so nothing stutters on first scroll
