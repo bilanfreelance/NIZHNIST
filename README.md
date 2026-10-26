@@ -7,7 +7,7 @@ Homepage concept for a women's linen clothing store (design concept by Valentyn 
 ## Stack
 - Plain HTML / CSS / ES modules — no build step
 - Type: **Instrument Serif** (serif display headlines) + **Manrope** (UI)
-- **Three.js** — one fixed WebGL canvas renders every `[data-gl]` image as a plane synced to its DOM box
+- No WebGL layer: all image motion is compositor-only (clip-path + transform) for jitter-free scrolling
 - **GSAP + ScrollTrigger** — intro, scroll reveals, pinned editorial & horizontal best sellers
 - **Lenis** — smooth scrolling
 

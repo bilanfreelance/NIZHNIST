@@ -32,7 +32,6 @@
   </div>
 </div>
 
-<canvas class="gl" aria-hidden="true"></canvas>
 
 <!-- Header -->
 <header class="header">
@@ -72,9 +71,11 @@
     <p class="hero__corner hero__corner--tl eyebrow"><span class="num">(SS26)</span>The Linen Edit</p>
     <p class="hero__corner hero__corner--tr eyebrow">Linen, made in Ukraine</p>
     <div class="hero__frame">
-      <div class="hero__media" data-gl="hero" data-focus="0.77,0.5" data-clip="#featured">
+      <div class="hero__media">
         <img src="assets/img/decor/hero.webp" alt="Woman in an ivory linen shirt and wide-leg trousers standing in warm sunlight against a stone wall" width="1672" height="941" fetchpriority="high">
       </div>
+    </div>
+    <div class="hero__probe">
       <button class="hotspot hero__hotspot" data-qv="zoria" style="--x:52%;--y:36%" aria-label="Quick view: The Essential Set, $189"><i><span class="hotspot__plus" aria-hidden="true"></span></i><span class="hotspot__tag"><b>The Essential Set</b><em>$189</em></span></button>
     </div>
     <h1 class="hero__title" aria-label="Made to Feel Free.">
@@ -258,6 +259,12 @@
 </main>
 
 <footer class="footer">
+  <ul class="wrap trust" aria-label="Why shop with us">
+    <li><b>Free shipping</b><span>on orders over $200</span></li>
+    <li><b>30-day returns</b><span>easy and free</span></li>
+    <li><b>Secure checkout</b><span>all major cards</span></li>
+    <li><b>Made in Ukraine</b><span>natural linen</span></li>
+  </ul>
   <div class="wrap footer__grid">
     <a href="#" class="fshot" data-qv="mavka">
       <p class="fshot__label"><b>[ The Olive Dress ]</b><span>Linen — $139 <i>↓</i></span></p>
@@ -293,6 +300,7 @@
   <header class="drawer__head"><h2>Your bag <span data-count="cart">0</span></h2><button class="icon-btn" data-close aria-label="Close bag"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
   <div class="ship"><p class="ship__text"></p><div class="ship__bar"><i></i></div></div>
   <div data-lenis-prevent class="drawer__body cart__items"></div>
+  <div class="upsell"></div>
   <footer class="drawer__foot cart__foot">
     <div class="cart__row"><span>Subtotal</span><strong class="cart__subtotal">$0</strong></div>
     <p class="cart__small">Taxes and shipping calculated at checkout.</p>

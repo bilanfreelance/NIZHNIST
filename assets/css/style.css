@@ -1098,3 +1098,51 @@ main > section.news > .wrap{position:relative;z-index:3}
   .quick.is-open .quick__btn{width:auto;padding:0 12px;justify-content:center}
   .quick.is-open .quick__btn span{display:none}
 }
+
+/* =========================================================
+   Smoothness pass — no WebGL layer; native, compositor-only motion
+   ========================================================= */
+[data-gl] img{opacity:1!important}
+.media,[data-gl]{will-change:clip-path}
+/* Hero: full-bleed image revealed through a clip window */
+.hero__frame{left:0!important;right:0;top:0!important;bottom:0!important;width:100%!important;transform:none!important;z-index:1;will-change:clip-path;clip-path:inset(50% 50% 50% 50%)}
+.hero__frame .hero__media{inset:0;overflow:hidden;will-change:transform}
+.hero__frame .hero__media img{object-position:60% 50%;will-change:transform}
+.hero__probe{position:absolute;left:50%;top:calc(var(--header-h) + 6vh);bottom:9vh;width:clamp(280px,29vw,560px);transform:translateX(-50%);z-index:3;pointer-events:none}
+.hero__probe .hotspot{pointer-events:auto}
+@media (max-width:900px){.hero__probe{width:62vw;top:calc(var(--header-h) + 64px);bottom:200px}}
+.featured{position:relative;z-index:3}
+main > section:not(.hero){position:relative;z-index:3}
+/* Header: constant height (no reflow); only the surface and logo scale change */
+.header,.header.is-scrolled{height:var(--header-h)}
+.header .logo,.header.is-scrolled .logo{width:clamp(128px,11vw,168px);transition:transform .5s var(--ease-out)}
+.header.is-scrolled .logo{transform:scale(.86)}
+/* Card hover: second angle + subtle zoom (CSS) */
+.card__media .alt{opacity:0}
+.card:hover .card__media img{transform:scale(1.04)}
+.card:hover .card__media .alt{opacity:1}
+@media (hover:none){.card:hover .card__media img{transform:none}.card:hover .card__media .alt{opacity:0}}
+/* One warm light sweep on hover over imagery */
+.card__media::after,.look__img::after,.details__item .media::after,.fshot__img::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(105deg,transparent 35%,rgba(255,236,200,.22) 50%,transparent 65%);transform:translateX(-120%);transition:none}
+.card:hover .card__media::after,.look__img:hover::after,.details__item .media:hover::after,.fshot:hover .fshot__img::after{transform:translateX(120%);transition:transform 1.1s var(--ease-out)}
+.look__img img,.details__item .media img{transition:transform .9s var(--ease-out)}
+.look__img:hover img,.details__item .media:hover img{transform:scale(1.03)}
+/* Linen fabric: CSS crossfade between swatches */
+.linen__canvas{overflow:hidden}
+.linen__canvas img{transition:opacity .8s var(--ease-out)}
+/* Trust strip */
+.trust{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;padding-bottom:clamp(48px,5vw,80px);margin-bottom:clamp(48px,5vw,80px);border-bottom:1px solid #3A3B33}
+.trust li{display:flex;flex-direction:column;gap:4px;font-size:14px;color:#F4F1E9}
+.trust b{font-weight:600}
+.trust span{color:#8C8B82;font-size:13px}
+@media (max-width:900px){.trust{grid-template-columns:1fr 1fr;row-gap:20px}}
+/* Cart upsell */
+.upsell:empty{display:none}
+.upsell{padding:14px 24px;border-top:1px solid var(--line)}
+.upsell__t{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.upsell__item{display:grid;grid-template-columns:52px 1fr auto;gap:14px;align-items:center;width:100%;text-align:left}
+.upsell__item img{width:52px;aspect-ratio:3/4;object-fit:cover}
+.upsell__item span{display:flex;flex-direction:column;font-size:14px}
+.upsell__item b{font-weight:600}.upsell__item em{font-style:normal;color:var(--muted);font-size:13px}
+.upsell__item i{font-style:normal;font-size:12px;font-weight:600;height:var(--chip-h);display:inline-flex;align-items:center;padding:0 12px;background:#EAE4D8;transition:background-color .3s,color .3s}
+.upsell__item:hover i{background:var(--olive);color:var(--ivory)}

@@ -155,6 +155,11 @@ function renderCart() {
   $('.ship__bar i').style.width = Math.min(100, total / FREE_SHIPPING * 100) + '%';
   $('.cart__subtotal').textContent = money(total);
   $('.cart__foot').style.display = cart.length ? '' : 'none';
+  // Upsell: one complementary piece not already in the bag
+  const PAIRS = { vira: 'polissia', zoria: 'vira', sonia: 'zoria', polissia: 'lada', lada: 'vira', lesya: 'kalyna', mavka: 'kalyna', kalyna: 'mavka' };
+  const inBag = cart.map(l => l.id);
+  const rec = cart.length ? [PAIRS[cart[cart.length - 1].id], ...Object.keys(PRODUCTS)].find(id => id && !inBag.includes(id)) : null;
+  $('.upsell').innerHTML = rec ? `<p class="upsell__t">Complete the look</p><button class="upsell__item" data-qv="${rec}"><img src="${PRODUCTS[rec].img.front}" alt="" width="64" height="85"><span><b>${PRODUCTS[rec].name}</b><em>${money(PRODUCTS[rec].price)}</em></span><i>Quick view +</i></button>` : '';
   if (!cart.length) {
     box.innerHTML = `<div class="empty"><h3>Your bag is empty</h3><p>Linen pieces you add will appear here.</p><a href="#featured" class="btn btn--dark" data-close><span>Explore the collection</span></a></div>`;
     return;
@@ -460,80 +465,87 @@ async function boot() {
     logo.style.clipPath = `inset(0 ${100 - prog.v * 100}% 0 0)`;
   });
 
-  // WebGL
-  let gl = null;
-  try {
-    const { GL } = await import('./gl.js');
-    gl = new GL($('.gl'), { onProgress: p => setP(p) });
-    const all = gl.addAll();
-    await Promise.race([all, new Promise(r => setTimeout(r, 7000))]);
-    document.documentElement.classList.add('gl-on');
-  } catch (err) {
-    console.warn('[NIZHNIST] WebGL disabled:', err);
-    $('.gl').remove(); gl = null;
-  }
+  // Preload the first screen of imagery (drives the loader)
+  const first = [$('.hero__media img'), ...$$('#featured .card__media .main').slice(0, 2)].filter(Boolean);
+  let loaded = 0;
+  await Promise.race([
+    Promise.all(first.map(img => (img.complete ? Promise.resolve() : new Promise(r => { img.addEventListener('load', r, { once: true }); img.addEventListener('error', r, { once: true }); })).then(() => setP(++loaded / first.length)))),
+    new Promise(r => setTimeout(r, 6000)),
+  ]);
+  try { await Promise.all(first.map(i => i.decode?.().catch(() => {}))); } catch {}
   setP(1);
-  gl?.warmup();
   ScrollTrigger.refresh();
   await new Promise(r => setTimeout(r, 650));
   gsap.ticker.remove(progTween);
 
   // Frame loop: Lenis → GL
-  let last = performance.now();
   gsap.ticker.add(time => {
     lenis.raf(time * 1000);
-    const now = performance.now(); const dt = Math.min(.05, (now - last) / 1000); last = now;
-    gl?.render(dt, lenis.velocity, lenis.scroll);
   });
   gsap.ticker.lagSmoothing(0);
 
-  intro(gl);
-  scrollScenes(gl);
-  interactions(gl);
+  intro();
+  scrollScenes();
+  interactions();
 }
 
-function intro(gl) {
+// The narrow hero window, measured from an invisible probe so CSS stays the source of truth
+function heroInset(collapsed) {
+  const r = $('.hero__probe').getBoundingClientRect(), W = document.documentElement.clientWidth, H = $('.hero__sticky').clientHeight;
+  const t = r.top - $('.hero__sticky').getBoundingClientRect().top, b = H - t - r.height;
+  const side = collapsed ? W / 2 : r.left;
+  return `inset(${t}px ${side}px ${b}px ${collapsed ? W / 2 : W - r.right}px)`;
+}
+
+function intro() {
   const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
   tl.to('.loader__inner', { y: -24, opacity: 0, duration: .6, ease: 'power2.in' })
     .to(loaderEl, { clipPath: 'inset(0 0 100% 0)', duration: 1.1, ease: 'expo.inOut' }, '-=.15')
     .add(() => { document.body.classList.remove('is-loading'); lenis.start(); });
-  const hero = gl?.item($('.hero__media'));
-  if (hero) tl.to(hero.u.uReveal, { value: 1, duration: 2.2, ease: 'power3.out' }, '-=.75');
-  tl.from('.hero__title .ch', { yPercent: 105, duration: 1.4, stagger: .03, ease: 'expo.out' }, hero ? '-=1.9' : '-=.6')
+  tl.fromTo('.hero__frame', { clipPath: () => heroInset(true) }, { clipPath: () => heroInset(), duration: 1.8, ease: 'expo.inOut' }, '-=.75')
+    .fromTo('.hero__media img', { scale: 1.18 }, { scale: 1, duration: 2.2, ease: 'expo.out' }, '<')
+    .from('.hero__title .ch', { yPercent: 105, duration: 1.4, stagger: .03, ease: 'expo.out' }, '-=1.7')
     .from('.hero__corner, .hero__foot > *', { y: 16, opacity: 0, duration: .9, stagger: .07, ease: 'power3.out' }, '-=1.1')
     .from('.header__inner > *', { y: -12, opacity: 0, duration: .7, stagger: .06, ease: 'power3.out' }, '<')
     .from('.hero__hotspot', { scale: 0, opacity: 0, duration: .6, ease: 'back.out(2)' }, '-=.3');
 }
 
-function scrollScenes(gl) {
+function scrollScenes() {
   // Header compact state
   ScrollTrigger.create({ start: 60, end: 'max', onToggle: s => header.classList.toggle('is-scrolled', s.isActive) });
 
   // Hero text drifts as the image folds away
   // Hero: the window opens to full bleed, then the next section slides over it
-  const frame = $('.hero__frame');
-  gsap.set(frame, { xPercent: -50, x: 0 }); // centre via GSAP so later scale tweens keep it centred
+  const frame = $('.hero__frame'), himg = $('.hero__media img');
+  gsap.set(himg, { xPercent: -10 }); // keeps the model centred inside the narrow window
   const htl = gsap.timeline({ scrollTrigger: { trigger: '.hero', start: 'top top', end: () => '+=' + window.innerHeight * .6, scrub: .8, invalidateOnRefresh: true } });
-  htl.to(frame, { top: 0, bottom: 0, width: () => document.documentElement.clientWidth, ease: 'power2.inOut', duration: 1 }, 0)
+  htl.fromTo(frame, { clipPath: () => heroInset() }, { clipPath: 'inset(0px 0px 0px 0px)', ease: 'power2.inOut', duration: 1, immediateRender: false }, 0)
+     .fromTo(himg, { xPercent: -10 }, { xPercent: 0, ease: 'power2.inOut', duration: 1, immediateRender: false }, 0)
      .to('.hero__title .line--a', { xPercent: -60, opacity: 0, ease: 'power2.in', duration: .7 }, 0)
      .to('.hero__title .line--b', { xPercent: 60, opacity: 0, ease: 'power2.in', duration: .7 }, 0)
-     .to('.hero__corner, .hero__foot, .hero__hotspot', { opacity: 0, y: -10, ease: 'power1.out', duration: .3 }, 0);
-  gsap.to(frame, { scale: 1.08, ease: 'none', scrollTrigger: { trigger: '.featured', start: 'top bottom', end: 'top top', scrub: true } });
+     .to('.hero__corner, .hero__foot, .hero__probe', { opacity: 0, y: -10, ease: 'power1.out', duration: .3 }, 0);
+  gsap.to('.hero__media', { scale: 1.08, ease: 'none', scrollTrigger: { trigger: '.featured', start: 'top bottom', end: 'top top', scrub: true } });
 
   // Dark statement opens like a panel
   gsap.fromTo('.statement', { clipPath: 'inset(8% 6% 0% 6%)' }, { clipPath: 'inset(0% 0% 0% 0%)', ease: 'none',
     scrollTrigger: { trigger: '.statement', start: 'top bottom', end: 'top 25%', scrub: .6 } });
 
-  // Image reveals (WebGL)
-  if (gl) {
-    gl.items.filter(it => it.type === 'editorial').forEach(it => { it.u.uReveal.value = 1; });
-    gl.items.filter(it => it.type !== 'hero' && it.type !== 'editorial').forEach(it => {
-      ScrollTrigger.create({
-        trigger: it.el, start: 'top 92%', once: true,
-        onEnter: () => gsap.to(it.u.uReveal, { value: 1, duration: it.type === 'fabric' ? 2 : 1.6, ease: 'power2.out', delay: (it.el.closest('.card') ? [...it.el.closest('[data-products]').children].indexOf(it.el.closest('.card')) % 4 : 0) * .08 }),
-      });
-    });
-  }
+  // Image reveals: a clean curtain + settle (compositor-only: clip-path + transform)
+  $$('[data-gl]:not([data-gl="editorial"])').forEach(el => {
+    const img = $('img', el); if (!img) return;
+    const card = el.closest('.card'), list = card?.parentElement;
+    const delay = card ? ([...list.children].indexOf(card) % 4) * .08 : 0;
+    gsap.set(el, { clipPath: 'inset(100% 0% 0% 0%)' });
+    ScrollTrigger.create({ trigger: el, start: 'top 92%', once: true, onEnter: () => {
+      gsap.to(el, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.3, ease: 'expo.inOut', delay });
+      gsap.fromTo($$('img', el), { scale: 1.16 }, { scale: 1, duration: 1.8, ease: 'expo.out', delay, clearProps: 'scale' });
+    } });
+  });
+  // gentle parallax for editorial frames (image moves inside its frame)
+  $$('[data-par]').forEach(el => {
+    const img = $('img', el); if (!img || el.closest('.card')) return;
+    gsap.fromTo(img, { yPercent: -5 }, { yPercent: 5, ease: 'none', scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true } });
+  });
 
   // Headings / reveals
   $$('[data-split]').forEach(h => gsap.from($$('.split-line > span', h), { yPercent: 110, duration: 1.1, ease: 'expo.out', stagger: .06, scrollTrigger: { trigger: h, start: 'top 88%', once: true } }));
@@ -680,7 +692,7 @@ function rollText() {
   });
 }
 
-function interactions(gl) {
+function interactions() {
   rollText();
   pointerLean($('.editorial__pin'), $$('.editorial__shots .fcard'));
   flyZone($('.linen__fabric'), $$('.linen__fly .fcard'), 'top 75%');
@@ -699,25 +711,14 @@ function interactions(gl) {
     });
   }
 
-  // Card hover → WebGL dissolve to the alternate angle
-  $$('.card').forEach(card => {
-    const media = $('.card__media', card);
-    card.addEventListener('mouseenter', () => gl?.hover(media, true));
-    card.addEventListener('mouseleave', () => { gl?.hover(media, false); const qk = $('.quick', card); qk.classList.remove('is-open'); });
-  });
-  // Editorial images get the same calm light sweep + gentle zoom
-  $$('[data-gl=""], .look__img[data-gl], .details__item .media[data-gl], .statement__media [data-gl], .look__minor [data-gl]').forEach(el => {
-    if (el.closest('.card')) return;
-    el.addEventListener('mouseenter', () => gl?.hover(el, true));
-    el.addEventListener('mouseleave', () => gl?.hover(el, false));
-  });
+  // Card hover: close the quick-add tray when leaving
+  $$('.card').forEach(card => card.addEventListener('mouseleave', () => $('.quick', card).classList.remove('is-open')));
 
   // Linen fabric swatches
   const fabric = $('.linen__canvas');
   $$('[data-fabric]').forEach(b => b.addEventListener('click', () => {
     $$('[data-fabric]').forEach(x => x.setAttribute('aria-checked', x === b));
     fabric.dataset.active = b.dataset.fabric;
-    gl?.setFabric(fabric, +b.dataset.fabric, gsap);
   }));
 
   // Category hover image
