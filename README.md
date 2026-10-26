@@ -6,6 +6,7 @@ Homepage concept for a women's linen clothing store (design concept by Valentyn 
 
 ## Stack
 - Plain HTML / CSS / ES modules — no build step
+- Type: **Bricolage Grotesque** (condensed ExtraBold display headlines) + **Manrope** (UI)
 - **Three.js** — one fixed WebGL canvas renders every `[data-gl]` image as a plane synced to its DOM box
 - **GSAP + ScrollTrigger** — intro, scroll reveals, pinned editorial & horizontal best sellers
 - **Lenis** — smooth scrolling

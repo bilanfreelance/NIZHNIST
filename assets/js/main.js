@@ -191,6 +191,22 @@ function toggleWish(id, btn) {
   wish = on ? [...wish, id] : wish.filter(x => x !== id);
   store.set('wish', wish);
   updateCounts(); syncHearts();
+
+/* ---------------------------------------------------------
+   Fit giant headlines to the full content width
+   --------------------------------------------------------- */
+function fitText() {
+  $$('[data-fit]').forEach(el => {
+    el.style.fontSize = '100px';
+    const range = document.createRange(); range.selectNodeContents(el);
+    const w = range.getBoundingClientRect().width;
+    const target = el.clientWidth;
+    if (w > 0 && target > 0) el.style.fontSize = (100 * target / w * .995).toFixed(2) + 'px';
+  });
+}
+fitText();
+document.fonts?.ready.then(() => { fitText(); window.ScrollTrigger?.refresh(); });
+let fitT; window.addEventListener('resize', () => { clearTimeout(fitT); fitT = setTimeout(fitText, 120); });
   if (btn) { btn.classList.remove('pop'); void btn.offsetWidth; btn.classList.add('pop'); }
   toast(on ? `${PRODUCTS[id].name} saved to wishlist` : `Removed from wishlist`);
 }
@@ -339,14 +355,32 @@ $$('.mmenu a').forEach(a => a.addEventListener('click', closeMenu));
 updateCounts(); syncHearts();
 
 /* ---------------------------------------------------------
+   Fit giant headlines to the full content width
+   --------------------------------------------------------- */
+function fitText() {
+  $$('[data-fit]').forEach(el => {
+    el.style.fontSize = '100px';
+    const range = document.createRange(); range.selectNodeContents(el);
+    const w = range.getBoundingClientRect().width;
+    const target = el.clientWidth;
+    if (w > 0 && target > 0) el.style.fontSize = (100 * target / w * .995).toFixed(2) + 'px';
+  });
+}
+fitText();
+document.fonts?.ready.then(() => { fitText(); window.ScrollTrigger?.refresh(); });
+let fitT; window.addEventListener('resize', () => { clearTimeout(fitT); fitT = setTimeout(fitText, 120); });
+
+/* ---------------------------------------------------------
    Motion
    --------------------------------------------------------- */
 const loaderEl = $('.loader');
 
 function splitHeadings() {
   $$('[data-split]').forEach(h => {
-    h.setAttribute('aria-label', h.textContent);
-    h.innerHTML = h.textContent.split(' ').map(w => `<span class="split-line" aria-hidden="true"><span>${w}</span></span>`).join(' ');
+    const sup = h.querySelector('sup'); const supHTML = sup ? sup.outerHTML : ''; sup?.remove();
+    const text = h.textContent.trim();
+    h.setAttribute('aria-label', text);
+    h.innerHTML = text.split(' ').map(w => `<span class="split-line" aria-hidden="true"><span>${w}</span></span>`).join(' ') + supHTML;
   });
   $$('[data-words]').forEach(p => { p.innerHTML = p.textContent.split(' ').map(w => `<span class="w">${w}</span>`).join(' '); });
   $$('.hero__title .ln').forEach(l => { l.innerHTML = [...l.textContent].map(c => `<span class="ch">${c === ' ' ? '&nbsp;' : c}</span>`).join(''); });
@@ -362,7 +396,7 @@ if (reduce || !gsap) {
 async function boot() {
   gsap.registerPlugin(ScrollTrigger);
   document.body.classList.add('is-loading');
-  splitHeadings();
+  splitHeadings(); fitText();
 
   // Smooth scroll
   lenis = new window.Lenis({ duration: 1.15, smoothWheel: true, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
@@ -484,6 +518,20 @@ function scrollScenes(gl) {
 }
 
 function interactions(gl) {
+  // Marquee moves only with the scroll (direction + speed follow the reader)
+  const mq = $('.marquee__track');
+  if (mq) {
+    let x = 0, skew = 0;
+    gsap.ticker.add(() => {
+      const v = lenis.velocity || 0;
+      const half = mq.scrollWidth / 2;
+      x -= v * .9;
+      if (x <= -half) x += half; if (x > 0) x -= half;
+      skew += (Math.max(-8, Math.min(8, v * .25)) - skew) * .1;
+      mq.style.transform = `translate3d(${x}px,0,0) skewX(${-skew}deg)`;
+    });
+  }
+
   // Card hover → WebGL dissolve to the alternate angle
   $$('.card').forEach(card => {
     const media = $('.card__media', card);

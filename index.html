@@ -11,7 +11,7 @@
 <meta property="og:image" content="assets/img/decor/hero.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="assets/img/decor/hero.webp">
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2366704A'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='20' fill='%23F4F1E9' text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E">
@@ -73,30 +73,40 @@
     </div>
     <div class="hero__shade" aria-hidden="true"></div>
     <div class="hero__content wrap">
-      <p class="eyebrow hero__eyebrow"><span>Summer 26</span><span>The Linen Edit</span></p>
-      <h1 class="hero__title" aria-label="Made to Feel Free.">
+      <div class="hero__bottom">
+        <div>
+          <p class="eyebrow hero__eyebrow"><span>(SS26)</span><span>The Linen Edit</span></p>
+          <p class="hero__lead">Natural fabrics. Considered silhouettes.<br>A little more room to breathe.</p>
+        </div>
+        <a href="#featured" class="btn btn--dark hero__cta"><span>Explore the collection</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+      <h1 class="hero__title" data-fit aria-label="Made to Feel Free.">
         <span class="line"><span class="ln">Made to</span></span>
         <span class="line"><span class="ln">Feel Free.</span></span>
       </h1>
-      <div class="hero__bottom">
-        <p class="hero__lead">Natural fabrics. Considered silhouettes.<br>A little more room to breathe.</p>
-        <a href="#featured" class="btn btn--dark hero__cta"><span>Explore the collection</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-      </div>
     </div>
     <button class="hotspot hero__hotspot" data-look="hero" style="--x:67%;--y:33%" aria-label="Shop this look: Zoria Linen Set"><i></i><span class="hotspot__tag"><b>Zoria Linen Set</b><em>₴4 850</em></span></button>
-    <div class="hero__scroll" aria-hidden="true"><span>Scroll</span><i></i></div>
+    <div class="hero__meta" aria-hidden="true"><span>Linen, made in Ukraine</span><span>Scroll to explore ↓</span></div>
   </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      <span>Natural linen</span><i></i><span>Made in Ukraine</span><i></i><span>Breathes with you</span><i></i><span>Softens with time</span><i></i>
+      <span>Natural linen</span><i></i><span>Made in Ukraine</span><i></i><span>Breathes with you</span><i></i><span>Softens with time</span><i></i>
+    </div>
+  </div>
 
   <!-- FEATURED -->
   <section class="featured section" id="featured">
     <div class="wrap">
       <div class="sec-head">
-        <div>
-          <p class="eyebrow" data-reveal>New arrivals</p>
-          <h2 class="h2" data-split>The Linen Edit</h2>
+        <p class="eyebrow" data-reveal><span class="num">(01)</span>New arrivals</p>
+        <h2 class="h2 h2--xl" data-split data-fit>The Linen Edit<sup>04</sup></h2>
+        <div class="sec-head__meta">
+          <p class="sec-head__text" data-reveal>Pieces cut from washed linen in ivory, sand, olive and cocoa — made to move with you from morning light to a long dinner outside.</p>
+          <a href="#" class="link link--arrow" data-reveal>View all pieces<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         </div>
-        <p class="sec-head__text" data-reveal>Pieces cut from washed linen in ivory, sand, olive and cocoa — made to move with you from morning light to a long dinner outside.</p>
-        <a href="#" class="link link--arrow" data-reveal>View all<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       </div>
       <div class="grid grid--featured" data-products="zoria,mavka,kalyna,lesya"></div>
     </div>
@@ -106,7 +116,7 @@
   <section class="statement section" id="story">
     <div class="wrap statement__grid">
       <div class="statement__text">
-        <p class="eyebrow" data-reveal>Our story</p>
+        <p class="eyebrow" data-reveal><span class="num">(02)</span>Our story</p>
         <p class="statement__big" data-words>Natural fabrics. Considered silhouettes. A little more room to breathe. NIZHNIST is linen made in Ukraine for women who move through the day with quiet confidence.</p>
         <a href="#" class="link link--arrow" data-reveal>Read our story<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       </div>
@@ -138,7 +148,7 @@
         <button class="hotspot" data-look="cocoa" style="--x:44%;--y:84%" aria-label="Kora Wide-Leg Trousers"><i></i><span class="hotspot__tag"><b>Kora Wide-Leg Trousers</b><em>₴2 900</em></span></button>
       </div>
       <div class="look__side">
-        <p class="eyebrow" data-reveal>Look 03 — Afternoon in the courtyard</p>
+        <p class="eyebrow" data-reveal><span class="num">(03)</span>Look — Afternoon in the courtyard</p>
         <h2 class="h2" data-split>Ivory over cocoa.</h2>
         <p class="look__text" data-reveal>An oversized shirt with rolled sleeves, worn loose over high-rise wide-leg trousers. Two pieces, endless ways to wear them.</p>
         <ul class="look__items" data-reveal>
@@ -159,8 +169,8 @@
     <div class="best__pin">
       <div class="wrap best__head">
         <div>
-          <p class="eyebrow" data-reveal>Most loved</p>
-          <h2 class="h2" data-split>Best sellers</h2>
+          <p class="eyebrow" data-reveal><span class="num">(04)</span>Most loved</p>
+          <h2 class="h2 h2--xl" data-split data-fit>Best sellers<sup>05</sup></h2>
         </div>
         <div class="best__progress" aria-hidden="true"><i></i></div>
       </div>
@@ -171,7 +181,7 @@
   <!-- CATEGORIES -->
   <section class="cats section" aria-label="Shop by category">
     <div class="wrap">
-      <p class="eyebrow" data-reveal>Shop by category</p>
+      <p class="eyebrow" data-reveal><span class="num">(05)</span>Shop by category</p>
       <ul class="cats__list">
         <li><a href="#" data-img="assets/img/products/p5-alt.webp"><span class="cats__n">01</span><span class="cats__name">Dresses</span><span class="cats__c">2 pieces</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></li>
         <li><a href="#" data-img="assets/img/products/p2-alt.webp"><span class="cats__n">02</span><span class="cats__name">Sets</span><span class="cats__c">3 pieces</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></li>
@@ -199,7 +209,7 @@
         </div>
       </div>
       <div class="linen__text">
-        <p class="eyebrow" data-reveal>Linen story</p>
+        <p class="eyebrow" data-reveal><span class="num">(06)</span>Linen story</p>
         <h2 class="h2" data-split>The beauty of natural linen.</h2>
         <p class="linen__lead" data-reveal>Linen comes from the flax plant. It breathes, keeps you cool in the heat and grows softer with every wash. Its slight irregularity is not a flaw — it is the texture you can feel.</p>
         <ol class="linen__points">
@@ -221,8 +231,8 @@
   <section class="news section">
     <div class="wrap news__grid">
       <div class="news__copy">
-        <p class="eyebrow" data-reveal>Letters from NIZHNIST</p>
-        <h2 class="h2" data-split>Slow news, once a month.</h2>
+        <p class="eyebrow" data-reveal><span class="num">(07)</span>Letters from NIZHNIST</p>
+        <h2 class="h2 h2--news" data-split>Slow news, once a month.</h2>
         <p data-reveal>New collections, behind-the-scenes from our atelier and linen care notes. No noise — just the things worth opening.</p>
         <form class="news__form" novalidate data-reveal>
           <label for="nl-email" class="sr">Email address</label>
