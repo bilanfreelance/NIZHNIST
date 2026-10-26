@@ -781,3 +781,13 @@ body{background:var(--ivory)}
 .look__minor{margin-top:48px;gap:clamp(12px,1.2vw,20px)}
 @media (max-width:900px){.look__main,.look__side{grid-column:1 / -1}}
 .grid--featured .card__badge{left:auto;right:56px;top:16px}
+
+/* Featured: no index numerals, four equal wide cards */
+.grid--featured .card__idx{display:none}
+.grid--featured .card__badge{left:14px;right:auto;top:14px}
+.grid--featured .card:nth-child(n){grid-column:span 6;margin-top:0}
+.grid--featured .card:nth-child(even){margin-top:clamp(64px,8vw,160px)}
+.grid--featured .card:nth-child(3){margin-top:calc(clamp(64px,8vw,160px) * -1 + 64px)}
+@media (max-width:900px){.grid--featured .card:nth-child(n){grid-column:auto;margin-top:0}.grid--featured .card:nth-child(even){margin-top:48px}}
+@media (max-width:560px){.grid--featured .card:nth-child(even){margin-top:0}}
+.card__badge.card__badge--olive{background:var(--olive);color:#fff}
