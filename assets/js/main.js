@@ -514,7 +514,8 @@ function scrollScenes(gl) {
 
   // Image reveals (WebGL)
   if (gl) {
-    gl.items.filter(it => it.type !== 'hero').forEach(it => {
+    gl.items.filter(it => it.type === 'editorial').forEach(it => { it.u.uReveal.value = 1; });
+    gl.items.filter(it => it.type !== 'hero' && it.type !== 'editorial').forEach(it => {
       ScrollTrigger.create({
         trigger: it.el, start: 'top 92%', once: true,
         onEnter: () => gsap.to(it.u.uReveal, { value: 1, duration: it.type === 'fabric' ? 2 : 1.6, ease: 'power2.out', delay: (it.el.closest('.card') ? [...it.el.closest('[data-products]').children].indexOf(it.el.closest('.card')) % 4 : 0) * .08 }),
@@ -682,6 +683,12 @@ function interactions(gl) {
     const media = $('.card__media', card);
     card.addEventListener('mouseenter', () => gl?.hover(media, true));
     card.addEventListener('mouseleave', () => { gl?.hover(media, false); const qk = $('.quick', card); qk.classList.remove('is-open'); });
+  });
+  // Editorial images get the same calm light sweep + gentle zoom
+  $$('[data-gl=""], .look__img[data-gl], .details__item .media[data-gl], .statement__media [data-gl], .look__minor [data-gl]').forEach(el => {
+    if (el.closest('.card')) return;
+    el.addEventListener('mouseenter', () => gl?.hover(el, true));
+    el.addEventListener('mouseleave', () => gl?.hover(el, false));
   });
 
   // Linen fabric swatches

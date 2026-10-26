@@ -32,30 +32,44 @@ void main(){
 }`;
 
 // Stable image shader: cover-fit, clean wipe reveal, calm crossfade on hover. No distortion.
+// Calm image shader — no distortion. Slat ("weave") reveal, colour develops toward
+// the centre of the viewport, a single warm light sweep on hover.
 const IMAGE_FRAG = /* glsl */`
 uniform sampler2D uTex; uniform sampler2D uTex2;
 uniform vec2 uRes; uniform vec2 uImg; uniform vec2 uImg2; uniform vec2 uFocus; uniform vec2 uMouse;
-uniform float uReveal, uHover, uTime, uPar, uZoom, uHas2, uScroll, uClip;
+uniform float uReveal, uHover, uTime, uPar, uZoom, uHas2, uScroll, uClip, uDev, uSheen;
 uniform vec3 uBg;
 varying vec2 vUv;
 ${NOISE}
+float ease(float t){ return t<.5 ? 4.*t*t*t : 1.-pow(-2.*t+2.,3.)/2.; }
 void main(){
   if (1. - vUv.y > uClip) discard;
   vec2 uv = vUv;
   float r = smoothstep(0., 1., uReveal);
-  float z = 1. + uZoom + uHover*.04 + (1.-r)*.08;
-  vec2 zuv = (uv-.5)/z + .5;
-  zuv.y += uPar;
-  zuv = clamp(zuv, 0., 1.);
+  float z = 1. + uZoom + uHover*.04 + (1.-r)*.06;
+  vec2 zuv = clamp((uv-.5)/z + .5 + vec2(0., uPar), 0., 1.);
   vec3 c = texture2D(uTex, cover(zuv, uRes, uImg, uFocus)).rgb;
   if (uHas2 > .5){
     vec3 c2 = texture2D(uTex2, cover(zuv, uRes, uImg2, vec2(.5))).rgb;
     c = mix(c, c2, smoothstep(.05, .95, uHover));
   }
+  // develop: slightly muted & lifted away from the centre of the screen
+  float l = dot(c, vec3(.299,.587,.114));
+  vec3 muted = mix(vec3(l), c, .55);
+  muted = mix(muted, vec3(.957,.945,.914), .12);
+  c = mix(muted, c, uDev);
+  // a single warm light sweep on hover
+  float band = (uv.x + (1.-uv.y)*.45) - mix(-.6, 1.9, uSheen);
+  c += vec3(1., .9, .72) * exp(-band*band*26.) * .10 * step(.001, uSheen) * (1.-uSheen*.3);
 #ifdef HERO
   float a = step(abs(uv.x-.5)*2., uReveal*1.001);
 #else
-  float a = step(uv.y, uReveal*1.001);
+  // weave reveal: vertical slats, alternating direction, staggered
+  float N = clamp(floor(uRes.x/110.), 4., 9.);
+  float idx = floor(uv.x*N);
+  float t = ease(clamp((uReveal - idx/N*.38)/.62, 0., 1.));
+  float y = mod(idx, 2.) < .5 ? uv.y : 1.-uv.y;
+  float a = step(y, t*1.001);
 #endif
   gl_FragColor = vec4(c, a);
 }`;
@@ -153,7 +167,7 @@ export class GL {
       uMouse: { value: new THREE.Vector2(.5, .5) },
       uReveal: { value: 0 }, uHover: { value: 0 }, uTime: { value: 0 },
       uPar: { value: 0 }, uZoom: { value: par * 1.25 }, uHas2: { value: t2 ? 1 : 0 },
-      uScroll: { value: 0 }, uVel: { value: 0 }, uClip: { value: 10 },
+      uScroll: { value: 0 }, uVel: { value: 0 }, uClip: { value: 10 }, uDev: { value: 1 }, uSheen: { value: 0 },
       uBg: { value: new THREE.Color('#F4F1E9') },
     };
     const mat = new THREE.ShaderMaterial({
@@ -214,7 +228,7 @@ export class GL {
 
   item(el) { return this.byEl.get(el); }
 
-  hover(el, on) { const it = this.byEl.get(el); if (it) it.hoverT = on ? 1 : 0; }
+  hover(el, on) { const it = this.byEl.get(el); if (!it) return; it.hoverT = on ? 1 : 0; if (on) { it.sheen = 0; it.sheenOn = true; } }
 
   render(dt, velocity = 0, scrollY = 0) {
     this.time += dt;
@@ -260,7 +274,10 @@ export class GL {
         const rel = ((r.top + r.height / 2) - H / 2) / H;
         u.uPar.value = Math.max(-1, Math.min(1, rel)) * it.par * .5;
       }
-      if (it.bend) u.uVel.value = this.vel;
+      // colour develops as the image approaches the centre of the viewport
+      const relc = Math.abs(((r.top + r.height / 2) - H / 2) / (H / 2 + r.height / 2));
+      u.uDev.value = 1 - Math.min(1, Math.max(0, (relc - .25) / .75));
+      if (it.sheenOn) { it.sheen = Math.min(1, (it.sheen || 0) + dt * .85); u.uSheen.value = it.sheen; if (it.sheen >= 1) { it.sheenOn = false; u.uSheen.value = 0; } }
       it.hover = lerp(it.hover, it.hoverT, it.hoverT ? .06 : .09);
       u.uHover.value = it.hover;
       if (inside) { it.mx = lerp(it.mx, lx, .2); it.my = lerp(it.my, ly, .2); }
