@@ -32,7 +32,23 @@
     <button class="burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
     <nav class="nav nav--left" aria-label="Primary">
       <a href="shop.html" class="link">Shop</a>
-      <a href="shop.html?cat=Sets" class="link">Collections</a>
+      <div class="mega">
+        <button class="link mega__btn" aria-expanded="false" aria-controls="mega">Collections<svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></svg></button>
+        <div class="mega__panel" id="mega">
+          <div class="mega__in">
+            <a href="shop.html?cat=Sets" class="mtile"><span class="mtile__img"><img src="assets/img/products/p2-alt.webp" alt="" loading="lazy" width="960" height="1280"></span><b>Sets</b><em>4 pieces</em></a>
+            <a href="shop.html?cat=Dresses" class="mtile"><span class="mtile__img"><img src="assets/img/products/p5-alt.webp" alt="" loading="lazy" width="960" height="1280"></span><b>Dresses</b><em>2 pieces</em></a>
+            <a href="shop.html?cat=Shirts" class="mtile"><span class="mtile__img"><img src="assets/img/products/p6-alt.webp" alt="" loading="lazy" width="960" height="1280"></span><b>Shirts</b><em>1 piece</em></a>
+            <a href="shop.html?cat=Jumpsuits" class="mtile"><span class="mtile__img"><img src="assets/img/products/p4-alt.webp" alt="" loading="lazy" width="960" height="1280"></span><b>Jumpsuits</b><em>1 piece</em></a>
+            <div class="mega__side">
+              <p class="eyebrow">Summer 26</p>
+              <p class="mega__t">The Linen <em>Edit</em></p>
+              <a href="index.html#lookbook" class="link link--arrow">View the lookbook<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+              <a href="shop.html" class="link link--arrow">Shop all pieces<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            </div>
+          </div>
+        </div>
+      </div>
       <a href="index.html#story" class="link">Our Story</a>
     </nav>
     <a href="index.html" class="logo" aria-label="NIZHNIST — home"><svg viewBox="83 226 2744 567" role="img"><use href="#logo"/></svg></a>
@@ -49,7 +65,11 @@
 <div class="mmenu" aria-hidden="true" data-lenis-prevent>
   <nav aria-label="Mobile">
     <a href="shop.html">Shop</a>
-    <a href="shop.html?cat=Sets">Collections</a>
+    <a href="shop.html?cat=Sets" class="mm-sub">Sets</a>
+    <a href="shop.html?cat=Dresses" class="mm-sub">Dresses</a>
+    <a href="shop.html?cat=Shirts" class="mm-sub">Shirts</a>
+    <a href="shop.html?cat=Jumpsuits" class="mm-sub">Jumpsuits</a>
+    <a href="index.html#lookbook">Lookbook</a>
     <a href="index.html#story">Our Story</a>
     <a href="#linen">Linen Story</a>
     <a href="#">Account</a>

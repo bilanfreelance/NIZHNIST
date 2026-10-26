@@ -395,6 +395,17 @@ burger.addEventListener('click', () => {
   if (open && gsap && !reduce) gsap.fromTo('.mmenu nav a', { yPercent: 60, opacity: 0 }, { yPercent: 0, opacity: 1, duration: .8, stagger: .06, ease: 'expo.out', delay: .25 });
 });
 $$('.mmenu a').forEach(a => a.addEventListener('click', closeMenu));
+// Collections mega menu (hover on desktop, click/keyboard everywhere)
+const mega = $('.mega'), megaBtn = $('.mega__btn');
+let megaT;
+const setMega = on => { clearTimeout(megaT); mega.classList.toggle('is-open', on); megaBtn.setAttribute('aria-expanded', on); header.classList.toggle('has-mega', on); };
+megaBtn?.addEventListener('click', () => setMega(!mega.classList.contains('is-open')));
+if (finePointer && mega) {
+  mega.addEventListener('mouseenter', () => setMega(true));
+  mega.addEventListener('mouseleave', () => { megaT = setTimeout(() => setMega(false), 180); });
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && mega?.classList.contains('is-open')) { setMega(false); megaBtn.focus(); } });
+document.addEventListener('click', e => { if (mega && !mega.contains(e.target)) setMega(false); });
 
 /* ---------------------------------------------------------
    Page modules (shop / product) + page transitions
@@ -480,7 +491,7 @@ async function boot() {
   splitHeadings(); fitText();
 
   // Smooth scroll
-  lenis = new window.Lenis({ prevent: n => !!n.closest?.('.drawer, .search, .mmenu'), lerp: .085, smoothWheel: true, wheelMultiplier: .95, touchMultiplier: 1.4 });
+  lenis = new window.Lenis({ prevent: n => !!n.closest?.('.drawer, .search, .mmenu'), duration: 1.15, easing: t => 1 - Math.pow(1 - t, 4), smoothWheel: true, wheelMultiplier: .95, touchMultiplier: 1.4 });
   lenis.stop();
   lenis.on('scroll', ScrollTrigger.update);
 
@@ -561,7 +572,7 @@ function scrollScenes() {
   // Hero: the window opens to full bleed, then the next section slides over it
   const frame = $('.hero__frame'), himg = $('.hero__media img');
   gsap.set(himg, { xPercent: -10 }); // keeps the model centred inside the narrow window
-  const htl = gsap.timeline({ scrollTrigger: { trigger: '.hero', start: 'top top', end: () => '+=' + window.innerHeight * .6, scrub: .8, invalidateOnRefresh: true } });
+  const htl = gsap.timeline({ scrollTrigger: { trigger: '.hero', start: 'top top', end: () => '+=' + window.innerHeight * .6, scrub: true, invalidateOnRefresh: true } });
   htl.fromTo(frame, { clipPath: () => heroInset() }, { clipPath: 'inset(0px 0px 0px 0px)', ease: 'power2.inOut', duration: 1, immediateRender: false }, 0)
      .fromTo(himg, { xPercent: -10 }, { xPercent: 0, ease: 'power2.inOut', duration: 1, immediateRender: false }, 0)
      .to('.hero__title .line--a', { xPercent: -60, opacity: 0, ease: 'power2.in', duration: .7 }, 0)
@@ -571,7 +582,7 @@ function scrollScenes() {
 
   // Dark statement opens like a panel
   gsap.fromTo('.statement', { clipPath: 'inset(8% 6% 0% 6%)' }, { clipPath: 'inset(0% 0% 0% 0%)', ease: 'none',
-    scrollTrigger: { trigger: '.statement', start: 'top bottom', end: 'top 25%', scrub: .6 } });
+    scrollTrigger: { trigger: '.statement', start: 'top bottom', end: 'top 25%', scrub: true } });
 
   }
 
@@ -603,11 +614,11 @@ function scrollScenes() {
   // Details: scattered frames drift at different depths
   [['.details__item:nth-of-type(1)', -60], ['.details__item:nth-of-type(2)', 40], ['.details__item:nth-of-type(3)', -110], ['.details__item:nth-of-type(4)', 70], ['.details__title', -30]].forEach(([s, d]) => {
     const el = $('.details--scatter ' + s); if (!el) return;
-    gsap.fromTo(el, { y: -d }, { y: d, ease: 'none', scrollTrigger: { trigger: '.details--scatter', start: 'top bottom', end: 'bottom top', scrub: .6 } });
+    gsap.fromTo(el, { y: -d }, { y: d, ease: 'none', scrollTrigger: { trigger: '.details--scatter', start: 'top bottom', end: 'bottom top', scrub: true } });
   });
   // Inline images reveal inside the sentence (clip only — the text never reflows)
   $$('.statement__big .inl').forEach(el => {
-    gsap.timeline({ scrollTrigger: { trigger: el, start: 'top 88%', end: 'top 55%', scrub: .8 } })
+    gsap.timeline({ scrollTrigger: { trigger: el, start: 'top 88%', end: 'top 55%', scrub: true } })
       .fromTo(el, { clipPath: 'inset(0 50% 0 50%)' }, { clipPath: 'inset(0 0% 0 0%)', ease: 'power2.inOut' }, 0)
       .fromTo($('img', el), { scale: 1.3 }, { scale: 1, ease: 'power2.out' }, 0);
   });
@@ -615,7 +626,7 @@ function scrollScenes() {
   // Editorial: zoom through the letters of “Linen” into the image
   buildMask();
   const mz = { p: 0 };
-  const etl = gsap.timeline({ scrollTrigger: { trigger: '.editorial', start: 'top top', end: 'bottom bottom', scrub: 1.4 } });
+  const etl = gsap.timeline({ scrollTrigger: { trigger: '.editorial', start: 'top top', end: 'bottom bottom', scrub: true } });
   etl.to(mz, { p: 1, ease: 'power1.in', duration: 1, onUpdate: () => setMask(mz.p) }, 0)
      .to('.editorial__hint', { opacity: 0, duration: .15 }, 0)
      .to('.editorial__text', { opacity: 1, duration: .25 }, .85)
@@ -633,7 +644,7 @@ function scrollScenes() {
     const dist = () => Math.max(0, track.scrollWidth - document.documentElement.clientWidth);
     gsap.to(track, {
       x: () => -dist(), ease: 'none', force3D: true,
-      scrollTrigger: { trigger: '.best__pin', start: 'top top', end: () => '+=' + dist(), pin: true, pinSpacing: true, scrub: .6, invalidateOnRefresh: true, fastScrollEnd: false,
+      scrollTrigger: { trigger: '.best__pin', start: 'top top', end: () => '+=' + dist(), pin: true, pinSpacing: true, scrub: true, invalidateOnRefresh: true, fastScrollEnd: false,
         onUpdate: s => ($('.best__progress i').style.transform = `scaleX(${s.progress})`) },
     });
   });
@@ -726,7 +737,7 @@ function flyZone(zone, cards, start = 'top 70%') {
   if (!zone || !cards.length) return;
   const intro = flyIn(cards, false);
   ScrollTrigger.create({ trigger: zone, start, once: true, onEnter: () => intro.play() });
-  gsap.timeline({ scrollTrigger: { trigger: zone, start: 'top bottom', end: 'bottom top', scrub: 1 } }).add(drift(cards, 90, false));
+  gsap.timeline({ scrollTrigger: { trigger: zone, start: 'top bottom', end: 'bottom top', scrub: true } }).add(drift(cards, 90, false));
   pointerLean(zone, cards);
 }
 
