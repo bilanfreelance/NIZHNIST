@@ -39,11 +39,12 @@ void main(){
 const IMAGE_FRAG = /* glsl */`
 uniform sampler2D uTex; uniform sampler2D uTex2;
 uniform vec2 uRes; uniform vec2 uImg; uniform vec2 uImg2; uniform vec2 uFocus; uniform vec2 uMouse;
-uniform float uReveal, uHover, uTime, uPar, uZoom, uHas2, uScroll;
+uniform float uReveal, uHover, uTime, uPar, uZoom, uHas2, uScroll, uClip;
 uniform vec3 uBg;
 varying vec2 vUv;
 ${NOISE}
 void main(){
+  if (1. - vUv.y > uClip) discard;
   vec2 uv = vUv;
   float aspect = uRes.x/uRes.y;
   float n = snoise(uv*vec2(3.*aspect,3.) + uTime*.04)*.5+.5;
@@ -212,7 +213,7 @@ export class GL {
       uMouse: { value: new THREE.Vector2(.5, .5) },
       uReveal: { value: 0 }, uHover: { value: 0 }, uTime: { value: 0 },
       uPar: { value: 0 }, uZoom: { value: par * 1.25 }, uHas2: { value: t2 ? 1 : 0 },
-      uScroll: { value: 0 }, uVel: { value: 0 },
+      uScroll: { value: 0 }, uVel: { value: 0 }, uClip: { value: 10 },
       uBg: { value: new THREE.Color('#F4F1E9') },
     };
     const mat = new THREE.ShaderMaterial({
@@ -221,7 +222,7 @@ export class GL {
     });
     const mesh = new THREE.Mesh(this.geoImg, mat);
     this.scene.add(mesh);
-    const item = { el, mesh, u, type, par, hover: 0, hoverT: 0, mx: .5, my: .5, rect: null, bend: type === 'image' };
+    const item = { el, mesh, u, type, par, hover: 0, hoverT: 0, mx: .5, my: .5, rect: null, bend: type === 'image', clipEl: el.dataset.clip ? document.querySelector(el.dataset.clip) : null };
     this.items.push(item);
     this.byEl.set(el, item);
     el.dataset.glReady = '1';
@@ -289,6 +290,7 @@ export class GL {
       it.mesh.position.set(r.left + r.width / 2 - W / 2, H / 2 - r.top - r.height / 2, 0);
       const u = it.u;
       u.uRes.value.set(r.width, r.height);
+      if (it.clipEl) u.uClip.value = (it.clipEl.getBoundingClientRect().top - r.top) / r.height;
       u.uTime.value = this.time;
 
       // local pointer

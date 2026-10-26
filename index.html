@@ -68,10 +68,11 @@
 <main id="main">
   <!-- HERO -->
   <section class="hero" id="top">
+   <div class="hero__sticky">
     <p class="hero__corner hero__corner--tl eyebrow"><span class="num">(SS26)</span>The Linen Edit</p>
     <p class="hero__corner hero__corner--tr eyebrow">Linen, made in Ukraine</p>
     <div class="hero__frame">
-      <div class="hero__media" data-gl="hero" data-focus="0.77,0.5">
+      <div class="hero__media" data-gl="hero" data-focus="0.77,0.5" data-clip="#featured">
         <img src="assets/img/decor/hero.webp" alt="Woman in an ivory linen shirt and wide-leg trousers standing in warm sunlight against a stone wall" width="1672" height="941" fetchpriority="high">
       </div>
       <button class="hotspot hero__hotspot" data-look="hero" style="--x:52%;--y:36%" aria-label="Shop this look: Zoria Linen Set"><i></i><span class="hotspot__tag"><b>Zoria Linen Set</b><em>₴4 850</em></span></button>
@@ -85,15 +86,9 @@
       <span class="hero__scrollcue" aria-hidden="true">Scroll</span>
       <a href="#featured" class="btn btn--dark hero__cta"><span>Explore the collection</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
     </div>
+   </div>
   </section>
 
-  <!-- MARQUEE -->
-  <div class="marquee" aria-hidden="true">
-    <div class="marquee__track">
-      <span>Natural linen</span><i></i><span>Made in Ukraine</span><i></i><span>Breathes with you</span><i></i><span>Softens with time</span><i></i>
-      <span>Natural linen</span><i></i><span>Made in Ukraine</span><i></i><span>Breathes with you</span><i></i><span>Softens with time</span><i></i>
-    </div>
-  </div>
 
   <!-- FEATURED -->
   <section class="featured section" id="featured">
@@ -130,6 +125,8 @@
   <section class="editorial" id="lookbook" aria-label="Editorial">
     <div class="editorial__pin">
       <div class="editorial__media" data-gl="editorial" data-focus="0.5,0.5"><img src="assets/img/decor/architecture.webp" alt="Sunlit Mediterranean architecture with olive leaf shadows on textured walls" width="1672" height="941" loading="lazy"></div>
+      <canvas class="editorial__mask" aria-hidden="true"></canvas>
+      <p class="editorial__hint eyebrow" aria-hidden="true">Lookbook · Summer 26</p>
       <div class="editorial__text">
         <p class="eyebrow">Lookbook · Summer 26</p>
         <h2 class="editorial__title"><span>Linen,</span> <span>in its own</span> <span><em>rhythm.</em></span></h2>
@@ -164,15 +161,13 @@
 
   <!-- BESTSELLERS -->
   <section class="best" id="best">
+    <div class="wrap best__head">
+      <p class="eyebrow" data-reveal><span class="num">(04)</span>Most loved</p>
+      <h2 class="h2 h2--xl" data-split data-fit>Best sellers<sup>05</sup></h2>
+    </div>
     <div class="best__pin">
-      <div class="wrap best__head">
-        <div>
-          <p class="eyebrow" data-reveal><span class="num">(04)</span>Most loved</p>
-          <h2 class="h2 h2--xl" data-split data-fit>Best sellers<sup>05</sup></h2>
-        </div>
-        <div class="best__progress" aria-hidden="true"><i></i></div>
-      </div>
       <div class="best__track" data-products="mavka,sonia,polissia,vira,lada" data-variant="track"></div>
+      <div class="wrap best__bar"><div class="best__progress" aria-hidden="true"><i></i></div></div>
     </div>
   </section>
 

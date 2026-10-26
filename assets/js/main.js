@@ -36,6 +36,7 @@ function cardHTML(p, i) {
   }).join('');
   return `
   <article class="card" data-id="${p.id}">
+    <span class="card__idx" aria-hidden="true">${String(i + 1).padStart(2, '0')}</span>
     <div class="card__media" data-gl data-alt="${p.img.alt}" data-focus="0.5,0.4">
       <a href="#" class="card__link" aria-label="View ${p.name}">
         <img class="main" src="${p.img.front}" alt="${p.name} in ${c.name.toLowerCase()} linen — front view" width="960" height="1280" ${lazy}>
@@ -449,11 +450,14 @@ function scrollScenes(gl) {
   ScrollTrigger.create({ start: 60, end: 'max', onToggle: s => header.classList.toggle('is-scrolled', s.isActive) });
 
   // Hero text drifts as the image folds away
-  const hs = { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: .6 };
-  gsap.to('.hero__title .line--a', { xPercent: -22, ease: 'none', scrollTrigger: hs });
-  gsap.to('.hero__title .line--b', { xPercent: 22, ease: 'none', scrollTrigger: hs });
-  gsap.to('.hero__frame', { yPercent: 14, ease: 'none', scrollTrigger: hs });
-  gsap.to('.hero__corner, .hero__foot', { opacity: 0, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: '35% top', scrub: true } });
+  // Hero: the window opens to full bleed, then the next section slides over it
+  const frame = $('.hero__frame');
+  const htl = gsap.timeline({ scrollTrigger: { trigger: '.hero', start: 'top top', end: () => '+=' + window.innerHeight, scrub: .8, invalidateOnRefresh: true } });
+  htl.to(frame, { top: 0, bottom: 0, width: () => document.documentElement.clientWidth, ease: 'power2.inOut', duration: 1 }, 0)
+     .to('.hero__title .line--a', { xPercent: -60, opacity: 0, ease: 'power2.in', duration: .7 }, 0)
+     .to('.hero__title .line--b', { xPercent: 60, opacity: 0, ease: 'power2.in', duration: .7 }, 0)
+     .to('.hero__corner, .hero__foot, .hero__hotspot', { opacity: 0, y: -10, ease: 'power1.out', duration: .3 }, 0);
+  gsap.to(frame, { scale: 1.08, ease: 'none', scrollTrigger: { trigger: '.featured', start: 'top bottom', end: 'top top', scrub: true } });
 
   // Dark statement opens like a panel
   gsap.fromTo('.statement', { clipPath: 'inset(8% 6% 0% 6%)' }, { clipPath: 'inset(0% 0% 0% 0%)', ease: 'none',
@@ -478,18 +482,23 @@ function scrollScenes(gl) {
   gsap.to('.statement__big .w', { opacity: 1, stagger: .05, ease: 'none', scrollTrigger: { trigger: '.statement__big', start: 'top 78%', end: 'bottom 45%', scrub: true } });
   $$('[data-speed]').forEach(el => gsap.to(el, { yPercent: parseFloat(el.dataset.speed) * 100, ease: 'none', scrollTrigger: { trigger: '.statement', start: 'top bottom', end: 'bottom top', scrub: true } }));
 
-  // Editorial: the window opens to full bleed
-  const ed = gsap.timeline({ scrollTrigger: { trigger: '.editorial', start: 'top top', end: 'bottom bottom', scrub: .6 } });
-  ed.to('.editorial__media', { width: '100vw', height: '100vh', ease: 'power2.inOut', duration: 1 })
-    .fromTo('.editorial__title span', { yPercent: 40, opacity: 0 }, { yPercent: 0, opacity: 1, stagger: .12, duration: .5, ease: 'power3.out' }, .35)
-    .fromTo('.editorial__text .eyebrow', { opacity: 0 }, { opacity: .8, duration: .3 }, .3)
-    .to({}, { duration: .3 });
+  // Editorial: zoom through the letters of “Linen” into the image
+  buildMask();
+  const mz = { p: 0 };
+  const etl = gsap.timeline({ scrollTrigger: { trigger: '.editorial', start: 'top top', end: 'bottom bottom', scrub: .8 } });
+  etl.to(mz, { p: 1, ease: 'power1.in', duration: 1, onUpdate: () => setMask(mz.p) }, 0)
+     .to('.editorial__hint', { opacity: 0, duration: .15 }, 0)
+     .to('.editorial__text', { opacity: 1, duration: .25 }, .85)
+     .fromTo('.editorial__title span', { yPercent: 50 }, { yPercent: 0, stagger: .06, duration: .3, ease: 'power3.out' }, .85)
+     .to({}, { duration: .45 });
+  setMask(0);
+  window.addEventListener('resize', () => { buildMask(); setMask(mz.p); });
 
   // Best sellers: horizontal travel on desktop
   const mm = gsap.matchMedia();
   mm.add('(min-width: 901px)', () => {
     const track = $('.best__track');
-    const dist = () => track.scrollWidth - window.innerWidth;
+    const dist = () => Math.max(0, track.scrollWidth - document.documentElement.clientWidth);
     gsap.to(track, {
       x: () => -dist(), ease: 'none',
       scrollTrigger: { trigger: '.best__pin', start: 'top top', end: () => '+=' + dist(), pin: true, scrub: true, invalidateOnRefresh: true, anticipatePin: 1,
@@ -511,7 +520,62 @@ function scrollScenes(gl) {
   }));
 }
 
+// Editorial text-mask: an ivory veil with the word “Linen” cut out of it, drawn on a 2D canvas
+const mask = { c: null, ctx: null, W: 0, H: 0, fs: 0, base: 0, o: [0, 0], dpr: 1, p: -1 };
+const MASK_FONT = '"Instrument Serif", Georgia, serif';
+function buildMask() {
+  const c = $('.editorial__mask'); if (!c) return;
+  const ctx = c.getContext('2d');
+  const W = document.documentElement.clientWidth, H = window.innerHeight, dpr = Math.min(window.devicePixelRatio || 1, 2);
+  c.width = W * dpr; c.height = H * dpr;
+  ctx.font = `100px ${MASK_FONT}`;
+  const fs = 100 * W * .84 / ctx.measureText('Linen').width;
+  const base = H / 2 + fs * .32;
+  Object.assign(mask, { c, ctx, W, H, fs, base, dpr, p: -1 });
+  // thickest point inside the glyphs (same renderer as the veil, so it is exact)
+  const k = .5, w = Math.ceil(W * k), h = Math.ceil(H * k);
+  const t = document.createElement('canvas'); t.width = w; t.height = h;
+  const tc = t.getContext('2d');
+  tc.font = `${fs * k}px ${MASK_FONT}`; tc.textAlign = 'center'; tc.textBaseline = 'alphabetic';
+  tc.fillText('Linen', w / 2, base * k);
+  const a = tc.getImageData(0, 0, w, h).data, ins = i => a[i * 4 + 3] > 200;
+  const hr = new Uint16Array(w * h), vr = new Uint16Array(w * h);
+  for (let y = 0; y < h; y++) { let st = -1; for (let x = 0; x <= w; x++) { const i = y * w + x; if (x < w && ins(i)) { if (st < 0) st = x; } else if (st >= 0) { for (let q = st; q < x; q++) hr[y * w + q] = Math.min(q - st + 1, x - q); st = -1; } } }
+  for (let x = 0; x < w; x++) { let st = -1; for (let y = 0; y <= h; y++) { const i = y * w + x; if (y < h && ins(i)) { if (st < 0) st = y; } else if (st >= 0) { for (let q = st; q < y; q++) vr[q * w + x] = Math.min(q - st + 1, y - q); st = -1; } } }
+  let best = 0, bi = 0;
+  for (let i = 0; i < w * h; i++) { const m = Math.min(hr[i], vr[i]); if (m > best) { best = m; bi = i; } }
+  mask.o = [(bi % w + .5) / k, (Math.floor(bi / w) + .5) / k];
+}
+function setMask(p) {
+  const { c, ctx, W, H, fs, base, dpr, o } = mask; if (!ctx) return;
+  if (Math.abs(p - mask.p) < .0005) return; mask.p = p;
+  c.style.opacity = p > .985 ? 0 : 1;
+  if (p > .985) return;
+  const s = Math.pow(140, p);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#F4F1E9'; ctx.fillRect(0, 0, W, H);
+  ctx.globalCompositeOperation = 'destination-out';
+  ctx.translate(o[0], o[1]); ctx.scale(s, s); ctx.translate(-o[0], -o[1]);
+  ctx.font = `${fs}px ${MASK_FONT}`; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+  ctx.fillText('Linen', W / 2, base);
+}
+
+function rollText() {
+  $$('.nav--left a, .btn > span, .link--arrow').forEach(el => {
+    if (el.querySelector('.roll')) return;
+    const node = [...el.childNodes].find(n => n.nodeType === 3 && n.textContent.trim());
+    if (!node) return;
+    const t = node.textContent.trim();
+    const r = document.createElement('span'); r.className = 'roll';
+    r.innerHTML = `<span>${t}</span><span aria-hidden="true">${t}</span>`;
+    el.replaceChild(r, node);
+  });
+}
+
 function interactions(gl) {
+  rollText();
   // Marquee moves only with the scroll (direction + speed follow the reader)
   const mq = $('.marquee__track');
   if (mq) {
