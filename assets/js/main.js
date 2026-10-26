@@ -510,7 +510,8 @@ function scrollScenes(gl) {
   });
 
   // Footer wordmark
-  gsap.from('.footer__logo svg', { yPercent: 40, opacity: 0, ease: 'none', scrollTrigger: { trigger: '.footer', start: 'top bottom', end: 'bottom bottom', scrub: true } });
+  gsap.from('.fshot, .fpanel', { y: 60, opacity: 0, duration: 1.1, stagger: .1, ease: 'expo.out', scrollTrigger: { trigger: '.footer', start: 'top 80%', once: true } });
+  gsap.fromTo('.fshot__img img', { yPercent: -6, scale: 1.12 }, { yPercent: 6, scale: 1.12, ease: 'none', scrollTrigger: { trigger: '.footer', start: 'top bottom', end: 'bottom bottom', scrub: true } });
 
   window.addEventListener('load', () => ScrollTrigger.refresh());
   // Anchor links via Lenis
