@@ -109,12 +109,6 @@ html.gl-on .media{background:transparent}
 /* =========================================================
    Announcement + Header
    ========================================================= */
-.announce{position:relative;z-index:60;background:var(--olive);color:#F4F1E9;font-size:13px;font-weight:500;text-align:center;padding:10px 48px;letter-spacing:.01em}
-.announce a{text-decoration:underline;text-underline-offset:3px}
-.announce__close{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:32px;height:32px;display:grid;place-items:center}
-.announce__close svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5}
-.announce.is-hidden{display:none}
-.announce.is-hidden ~ main .hero{height:100vh;height:100svh}
 
 .header{position:sticky;top:0;z-index:50;height:var(--header-h);margin-bottom:calc(var(--header-h) * -1);transition:background-color .5s var(--ease-out),height .5s var(--ease-out),box-shadow .5s}
 .header::before{content:"";position:absolute;inset:0;background:rgba(255,255,255,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);opacity:0;transition:opacity .5s var(--ease-out);border-bottom:1px solid var(--line)}
@@ -152,19 +146,24 @@ html.gl-on .media{background:transparent}
 /* =========================================================
    Hero
    ========================================================= */
-.hero{position:relative;height:calc(100vh - 40px);height:calc(100svh - 40px);min-height:600px;overflow:hidden;background:var(--ivory)}
+.hero{position:relative;height:100vh;height:100svh;min-height:600px;overflow:hidden;background:var(--ivory)}
 .hero__media{position:absolute;inset:0}
-.hero__media img{width:100%;height:100%;object-fit:cover;object-position:66% 50%}
+.hero__media img{width:100%;height:100%;object-fit:cover;object-position:60% 25%}
+.hero__shade{position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:
+    linear-gradient(90deg, rgba(244,241,233,.78) 0%, rgba(244,241,233,.55) 28%, rgba(244,241,233,.12) 50%, rgba(244,241,233,0) 62%),
+    linear-gradient(0deg, rgba(244,241,233,.55) 0%, rgba(244,241,233,0) 38%),
+    linear-gradient(180deg, rgba(244,241,233,.45) 0%, rgba(244,241,233,0) 16%);}
 .hero__content{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:clamp(32px,6vh,72px);pointer-events:none}
 .hero__content > *{pointer-events:auto}
-.hero__eyebrow{color:var(--ink);opacity:.75;margin-bottom:clamp(14px,2vh,24px)}
+.hero__eyebrow{color:var(--ink);margin-bottom:clamp(14px,2vh,24px)}
 .hero__eyebrow span+span::before{content:"";display:inline-block;width:28px;height:1px;background:currentColor;vertical-align:middle;margin-right:18px}
 .hero__title{font-size:clamp(56px,9.6vw,156px);font-weight:800;line-height:.9;letter-spacing:-.055em;color:var(--ink)}
 .hero__title .line{display:block;overflow:hidden;padding-bottom:.06em}
 .hero__title .ln{display:inline-block}
 .hero__title .ch{display:inline-block;will-change:transform}
 .hero__bottom{display:flex;align-items:flex-end;justify-content:space-between;gap:32px;margin-top:clamp(20px,3.5vh,40px);max-width:52vw}
-.hero__lead{font-size:clamp(15px,1.15vw,18px);line-height:1.55;color:var(--ink);max-width:340px;font-weight:500}
+.hero__lead{font-size:clamp(16px,1.2vw,19px);line-height:1.5;color:var(--ink);max-width:380px;font-weight:600}
 .hero__scroll{position:absolute;right:var(--gutter);bottom:clamp(32px,6vh,72px);z-index:2;display:flex;align-items:center;gap:12px;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ink)}
 .hero__scroll i{width:1px;height:48px;background:rgba(34,35,29,.25);position:relative;overflow:hidden}
 .hero__scroll i::after{content:"";position:absolute;left:0;right:0;top:0;height:40%;background:var(--ink);animation:drip 2.4s var(--ease-io) 3}
@@ -455,6 +454,7 @@ html:not(.gl-on) .linen__hint{display:none}
   .bag-label{display:none}
   .hero{min-height:560px}
   .hero__media img{object-position:72% 50%}
+  .hero__shade{background:linear-gradient(0deg, rgba(244,241,233,.88) 0%, rgba(244,241,233,.6) 35%, rgba(244,241,233,0) 62%),linear-gradient(180deg, rgba(244,241,233,.6) 0%, rgba(244,241,233,0) 14%)}
   .hero__bottom{flex-direction:column;align-items:flex-start;max-width:none}
   .hero__scroll{display:none}
   .hero__hotspot{--x:70%!important;--y:42%!important}

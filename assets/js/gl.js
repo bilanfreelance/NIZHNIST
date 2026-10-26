@@ -48,17 +48,14 @@ void main(){
   float aspect = uRes.x/uRes.y;
   float n = snoise(uv*vec2(3.*aspect,3.) + uTime*.04)*.5+.5;
 
+  #ifdef HERO
+  float z = 1.;
+#else
   float z = 1. + uZoom + uHover*.045 + (1.-uReveal)*.05;
+#endif
   vec2 zuv = (uv-.5)/z + .5;
   zuv.y += uPar;
 
-#ifdef HERO
-  // a breeze moving through linen
-  zuv.x += sin(zuv.y*5. + uTime*.7)*.0016 + sin(zuv.y*13. + uTime*1.1)*.0007;
-  zuv += (uMouse-.5)*vec2(-.014,.009);
-  zuv.y += sin(zuv.x*7. + uTime*.4)*.014*uScroll;
-  zuv = (zuv-.5)/(1.+uScroll*.06)+.5;
-#endif
 
   // hover: second angle unfolds from the cursor with a soft fabric edge
   float d = distance(vec2(uv.x*aspect, uv.y), vec2(uMouse.x*aspect, uMouse.y));
@@ -87,11 +84,6 @@ void main(){
   float glow = smoothstep(t-.1, t-.04, val)*a;
   c = mix(c, c*vec3(1.05,1.,.92) + .04, glow);
 
-#ifdef HERO
-  float g = exp(-pow(distance(vec2(uv.x*aspect,uv.y), vec2(uMouse.x*aspect,uMouse.y))*1.5, 2.));
-  c += vec3(1.,.86,.62)*g*.06;
-  c = mix(c, uBg, uScroll*.4);
-#endif
   gl_FragColor = vec4(c, a);
 }`;
 

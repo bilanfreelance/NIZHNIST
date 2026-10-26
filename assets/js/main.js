@@ -325,9 +325,6 @@ $('.news__form').addEventListener('submit', e => {
 /* ---------------------------------------------------------
    Announcement, header, mobile menu
    --------------------------------------------------------- */
-const announce = $('.announce');
-if (store.get('announce', false)) announce.classList.add('is-hidden');
-$('.announce__close').addEventListener('click', () => { announce.classList.add('is-hidden'); store.set('announce', true); ScrollTrigger?.refresh(); });
 
 const header = $('.header');
 const burger = $('.burger'), mmenu = $('.mmenu');
