@@ -1,9 +1,9 @@
-import { initShop } from './shop.js?v=261026102506';
-import { initProduct } from './product.js?v=261026102506';
-import { initCart } from './cart.js?v=261026102506';
-import { initCheckout } from './checkout.js?v=261026102506';
-import { initContent } from './content.js?v=261026102506';
-import { PRODUCTS, COLORS, LOOKS, FREE_SHIPPING, money } from './data.js?v=261026102506';
+import { initShop } from './shop.js?v=261026102840';
+import { initProduct } from './product.js?v=261026102840';
+import { initCart } from './cart.js?v=261026102840';
+import { initCheckout } from './checkout.js?v=261026102840';
+import { initContent } from './content.js?v=261026102840';
+import { PRODUCTS, COLORS, LOOKS, FREE_SHIPPING, money } from './data.js?v=261026102840';
 
 const gsap = window.gsap;
 const ScrollTrigger = window.ScrollTrigger;
@@ -570,7 +570,7 @@ function intro() {
     .fromTo('.hero__media img', { scale: 1.18 }, { scale: 1, duration: 2.2, ease: 'expo.out' }, '<')
     .from('.hero__title .ch', { yPercent: 105, duration: 1.4, stagger: .03, ease: 'expo.out' }, '-=1.7')
     .from('.hero__corner, .hero__foot > *', { y: 16, opacity: 0, duration: .9, stagger: .07, ease: 'power3.out' }, '-=1.1')
-    .from('.header__inner > *', { y: -12, opacity: 0, duration: .7, stagger: .06, ease: 'power3.out' }, '<')
+    .from('.header__inner > *', { y: -12, opacity: 0, duration: .7, stagger: .06, ease: 'power3.out', clearProps: 'transform' }, '<')
     .from('.hero__hotspot', { scale: 0, opacity: 0, duration: .6, ease: 'back.out(2)' }, '-=.3');
 }
 
