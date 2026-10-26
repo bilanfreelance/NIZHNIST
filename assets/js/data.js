@@ -23,6 +23,28 @@ export const PRODUCTS = {
   kalyna:   { id: 'kalyna',   no: '08', name: 'The Sand Wrap Dress',           cat: 'Dresses',   sub: 'Wrap-style shirt dress, natural and relaxed',           price: 155, color: 'sand',           badge: 'New',         sizes: { XS: 1, S: 1, M: 1, L: 0 }, img: set(7) },
 };
 
+// Product copy, set contents and merchandising relations (concept content)
+export const INFO = {
+  zoria:    { desc: 'A relaxed linen set designed for everyday comfort — an easy shirt with rolled sleeves over high-rise wide-leg trousers.', pieces: ['Relaxed linen shirt', 'Wide-leg linen trousers'], fit: 'Relaxed fit. The trousers sit high on the waist with an elasticated back.', related: ['vira', 'sonia', 'lada'] },
+  sonia:    { desc: 'Our lightest look for hot days: a boxy sand shirt worn open over matching linen shorts.', pieces: ['Boxy linen shirt', 'Linen shorts'], fit: 'Boxy, slightly cropped shirt. Shorts with a soft elasticated waist.', related: ['zoria', 'kalyna', 'vira'] },
+  polissia: { desc: 'A refined, minimalist outfit — a sleeveless chocolate vest buttoned over coordinating wide-leg trousers.', pieces: ['Sleeveless linen vest', 'Coordinating linen trousers'], fit: 'Tailored vest with a straight hem. Trousers are high-rise and full-length.', related: ['vira', 'lada', 'zoria'] },
+  lada:     { desc: 'Soft volume meets structured tailoring: a gathered ivory blouse with puff sleeves and chocolate linen trousers.', pieces: ['Gathered linen blouse', 'Chocolate linen trousers'], fit: 'Blouse is voluminous with cuffed sleeves. Trousers are high-rise and wide.', related: ['polissia', 'vira', 'lesya'] },
+  lesya:    { desc: 'A light ivory one-piece with a square neckline and a gathered wide leg — one decision, the whole day sorted.', pieces: null, fit: 'Fitted bodice, relaxed wide leg. Choose your usual size.', related: ['kalyna', 'mavka', 'zoria'] },
+  mavka:    { desc: 'An olive maxi dress with a fitted sleeveless bodice and a full, gathered skirt that moves as you walk.', pieces: null, fit: 'Fitted through the bodice, full from the waist. Midi-to-maxi length.', related: ['kalyna', 'lesya', 'vira'] },
+  vira:     { desc: 'The everyday linen shirt: dropped shoulders, a relaxed body and sleeves made to be rolled.', pieces: null, fit: 'Oversized fit. Size down for a closer silhouette.', related: ['zoria', 'polissia', 'lada'] },
+  kalyna:   { desc: 'A sand wrap shirt dress with a tie waist and a flowing skirt — easy to dress up or down.', pieces: null, fit: 'Adjustable wrap with a tie waist. Relaxed through the skirt.', related: ['mavka', 'lesya', 'sonia'] },
+};
+
+export const CATEGORIES = ['Sets', 'Dresses', 'Shirts', 'Jumpsuits'];
+
+// Demo size chart (body measurements, cm) — replace with the brand's real measurements
+export const SIZE_CHART = [
+  ['XS', '80–83', '62–65', '87–90'],
+  ['S', '84–87', '66–69', '91–94'],
+  ['M', '88–92', '70–74', '95–99'],
+  ['L', '93–97', '75–79', '100–104'],
+];
+
 export const LOOKS = {
   hero:  { title: 'The Essential Set', items: ['zoria'] },
   cocoa: { title: 'Ivory over chocolate', items: ['vira', 'polissia'] },

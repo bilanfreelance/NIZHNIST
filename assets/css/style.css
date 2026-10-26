@@ -1146,3 +1146,14 @@ main > section:not(.hero){position:relative;z-index:3}
 .upsell__item b{font-weight:600}.upsell__item em{font-style:normal;color:var(--muted);font-size:13px}
 .upsell__item i{font-style:normal;font-size:12px;font-weight:600;height:var(--chip-h);display:inline-flex;align-items:center;padding:0 12px;background:#EAE4D8;transition:background-color .3s,color .3s}
 .upsell__item:hover i{background:var(--olive);color:var(--ivory)}
+.hero__fade:not(.hero__probe):not(.hero__foot){position:absolute;inset:0;z-index:2;pointer-events:none}
+.hero__fade .hero__corner{pointer-events:auto}
+.hero__frame .hero__media img{object-position:60% 18%;transform-origin:60% 18%}
+/* Hero hotspot: quiet dot, label on hover */
+.hero__hotspot i{width:26px;height:26px;border-radius:50%;background:rgba(244,241,233,.55);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);box-shadow:0 0 0 1px rgba(244,241,233,.7)}
+.hero__hotspot .hotspot__plus::before,.hero__hotspot .hotspot__plus::after{background:var(--ink);width:8px;margin-left:-4px}
+.hero__hotspot .hotspot__tag{opacity:0;transform:translateX(-6px);transition:opacity .35s var(--ease-out),transform .35s var(--ease-out),background-color .3s}
+.hero__hotspot:hover .hotspot__tag,.hero__hotspot:focus-visible .hotspot__tag{opacity:1;transform:none}
+.hero__hotspot:hover i{background:var(--ivory)}
+@media (hover:none){.hero__hotspot .hotspot__tag{display:none!important}}
+.editorial{height:420vh}

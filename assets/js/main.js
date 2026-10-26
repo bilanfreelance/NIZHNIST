@@ -523,7 +523,7 @@ function scrollScenes() {
      .fromTo(himg, { xPercent: -10 }, { xPercent: 0, ease: 'power2.inOut', duration: 1, immediateRender: false }, 0)
      .to('.hero__title .line--a', { xPercent: -60, opacity: 0, ease: 'power2.in', duration: .7 }, 0)
      .to('.hero__title .line--b', { xPercent: 60, opacity: 0, ease: 'power2.in', duration: .7 }, 0)
-     .to('.hero__corner, .hero__foot, .hero__probe', { opacity: 0, y: -10, ease: 'power1.out', duration: .3 }, 0);
+     .fromTo('.hero__fade', { opacity: 1, y: 0 }, { opacity: 0, y: -10, ease: 'power1.out', duration: .3, immediateRender: false }, 0);
   gsap.to('.hero__media', { scale: 1.08, ease: 'none', scrollTrigger: { trigger: '.featured', start: 'top bottom', end: 'top top', scrub: true } });
 
   // Dark statement opens like a panel
@@ -569,14 +569,14 @@ function scrollScenes() {
   // Editorial: zoom through the letters of “Linen” into the image
   buildMask();
   const mz = { p: 0 };
-  const etl = gsap.timeline({ scrollTrigger: { trigger: '.editorial', start: 'top top', end: 'bottom bottom', scrub: .8 } });
+  const etl = gsap.timeline({ scrollTrigger: { trigger: '.editorial', start: 'top top', end: 'bottom bottom', scrub: 1.4 } });
   etl.to(mz, { p: 1, ease: 'power1.in', duration: 1, onUpdate: () => setMask(mz.p) }, 0)
      .to('.editorial__hint', { opacity: 0, duration: .15 }, 0)
      .to('.editorial__text', { opacity: 1, duration: .25 }, .85)
      .fromTo('.editorial__title span', { yPercent: 50 }, { yPercent: 0, stagger: .06, duration: .3, ease: 'power3.out' }, .85)
-     .add(flyIn($$('.editorial__shots .fcard'), true), .9)
-     .add(drift($$('.editorial__shots .fcard'), 70, true), 1.25)
-     .to({}, { duration: .55 });
+     .add(flyIn($$('.editorial__shots .fcard'), true), .85)
+     .add(drift($$('.editorial__shots .fcard'), 60, true), 1.55)
+     .to({}, { duration: .3 });
   setMask(0);
   window.addEventListener('resize', () => { buildMask(); setMask(mz.p); });
 
@@ -654,13 +654,13 @@ function flyIn(cards, asTimeline) {
   const tl = gsap.timeline({ paused: !asTimeline });
   cards.forEach((c, i) => {
     const r = parseFloat(c.dataset.rot || 0), d = parseFloat(c.dataset.depth || 1);
-    tl.fromTo(c, { yPercent: 120 + d * 40, rotation: r * 3, opacity: 0 }, { yPercent: 0, rotation: r, opacity: 1, duration: asTimeline ? .35 : 1.4, ease: 'expo.out' }, i * (asTimeline ? .06 : .12));
+    tl.fromTo(c, { yPercent: 70 + d * 30, rotation: r * 1.8, opacity: 0 }, { yPercent: 0, rotation: r, opacity: 1, duration: asTimeline ? .7 : 1.8, ease: asTimeline ? 'sine.out' : 'power3.out' }, i * (asTimeline ? .1 : .14));
   });
   return tl;
 }
 function drift(cards, dist, asTimeline) {
   const tl = gsap.timeline();
-  cards.forEach(c => { const d = parseFloat(c.dataset.depth || 1); tl.to(c, { y: -dist * d, rotation: `+=${(parseFloat(c.dataset.rot || 0) > 0 ? 1 : -1) * 3 * d}`, ease: 'none', duration: asTimeline ? .55 : 1 }, 0); });
+  cards.forEach(c => { const d = parseFloat(c.dataset.depth || 1); tl.to(c, { y: -dist * d, rotation: `+=${(parseFloat(c.dataset.rot || 0) > 0 ? 1 : -1) * 2 * d}`, ease: 'sine.inOut', duration: asTimeline ? 1 : 1 }, 0); });
   return tl;
 }
 function pointerLean(zone, cards) {
