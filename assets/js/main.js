@@ -299,7 +299,7 @@ $('.look__all').addEventListener('click', () => {
 const q = $('#q');
 function renderSearch() {
   const term = q.value.trim().toLowerCase();
-  const list = Object.values(PRODUCTS).filter(p => p.id !== 'kora' || term).filter(p =>
+  const list = Object.values(PRODUCTS).filter(p =>
     !term || [p.name, p.cat, p.sub, COLORS[p.color].name].join(' ').toLowerCase().includes(term));
   $('.search__results').innerHTML = list.length
     ? list.slice(0, 10).map(p => `<a href="#" class="sr-card"><img src="${p.img.front}" alt="${p.name}" loading="lazy" width="960" height="1280"><p>${p.name}</p><span>${money(p.price)} · ${COLORS[p.color].name}</span></a>`).join('')

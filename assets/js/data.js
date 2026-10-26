@@ -6,26 +6,28 @@ export const COLORS = {
   ivory: { name: 'Ivory', hex: '#EAE2D2' },
   sand: { name: 'Sand', hex: '#D6C3A3' },
   olive: { name: 'Olive', hex: '#66704A' },
-  cocoa: { name: 'Cocoa', hex: '#4A3226' },
+  chocolate: { name: 'Chocolate', hex: '#4A3226' },
+  ivoryChocolate: { name: 'Ivory / Chocolate', hex: 'linear-gradient(90deg,#EAE2D2 50%,#4A3226 50%)' },
 };
 
+// A. Clothing sets
+// B. Individual garments
 export const PRODUCTS = {
-  zoria:    { id: 'zoria',    name: 'Zoria Linen Set',        cat: 'Sets',     sub: 'Relaxed shirt + wide-leg trousers', price: 4850, color: 'ivory', badge: 'New',         sizes: { XS: 1, S: 1, M: 1, L: 0 }, img: set(1) },
-  sonia:    { id: 'sonia',    name: 'Sonia Shirt & Shorts',   cat: 'Sets',     sub: 'Boxy shirt + tailored shorts',      price: 3900, color: 'sand',  sizes: { XS: 1, S: 1, M: 1, L: 1 }, img: set(2) },
-  polissia: { id: 'polissia', name: 'Polissia Vest Set',      cat: 'Sets',     sub: 'Waistcoat + wide-leg trousers',     price: 5200, color: 'cocoa', sizes: { XS: 0, S: 1, M: 1, L: 1 }, img: set(3) },
-  lesya:    { id: 'lesya',    name: 'Lesya Linen Jumpsuit',   cat: 'Jumpsuits',sub: 'Square neck, gathered wide leg',    price: 4300, color: 'ivory', badge: 'New',         sizes: { XS: 1, S: 1, M: 0, L: 1 }, img: set(4) },
-  mavka:    { id: 'mavka',    name: 'Mavka Maxi Dress',       cat: 'Dresses',  sub: 'Sleeveless, full gathered skirt',    price: 4600, color: 'olive', badge: 'Best seller', sizes: { XS: 0, S: 1, M: 1, L: 1 }, img: set(5) },
-  vira:     { id: 'vira',     name: 'Vira Oversized Shirt',   cat: 'Shirts',   sub: 'Dropped shoulder, rolled sleeves',  price: 2700, color: 'ivory', sizes: { XS: 1, S: 1, M: 1, L: 1 }, img: set(6) },
-  kalyna:   { id: 'kalyna',   name: 'Kalyna Wrap Dress',      cat: 'Dresses',  sub: 'Tie waist, flowing maxi length',    price: 5400, color: 'sand',  badge: 'New',         sizes: { XS: 1, S: 1, M: 1, L: 0 }, img: set(7) },
-  lada:     { id: 'lada',     name: 'Lada Puff-Sleeve Blouse',cat: 'Shirts',   sub: 'Gathered neckline, cuffed sleeve',  price: 2450, color: 'ivory', sizes: { XS: 1, S: 1, M: 1, L: 1 }, img: set(8) },
-  kora:     { id: 'kora',     name: 'Kora Wide-Leg Trousers', cat: 'Trousers', sub: 'High rise, soft pleats',            price: 2900, color: 'cocoa', sizes: { XS: 1, S: 1, M: 1, L: 0 }, img: { front: img(8, 'back'), alt: img(6, 'back'), back: img(8, 'back'), macro: img(3, 'macro') } },
+  zoria:    { id: 'zoria',    no: '01', name: 'The Essential Set',             cat: 'Sets',      sub: 'Ivory linen shirt + matching wide-leg trousers',        price: 189, color: 'ivory',          badge: 'New',         sizes: { XS: 1, S: 1, M: 1, L: 0 }, img: set(1) },
+  sonia:    { id: 'sonia',    no: '02', name: 'The Summer Set',                cat: 'Sets',      sub: 'Sand linen shirt + matching linen shorts',              price: 159, color: 'sand',           sizes: { XS: 1, S: 1, M: 1, L: 1 }, img: set(2) },
+  polissia: { id: 'polissia', no: '03', name: 'The Linen Vest',                cat: 'Sets',      sub: 'Sleeveless linen vest + coordinating trousers',         price: 179, color: 'chocolate',      sizes: { XS: 0, S: 1, M: 1, L: 1 }, img: set(3) },
+  lada:     { id: 'lada',     no: '04', name: 'The Gathered Blouse + Trousers',cat: 'Sets',      sub: 'Gathered ivory blouse + chocolate linen trousers',      price: 175, color: 'ivoryChocolate', sizes: { XS: 1, S: 1, M: 1, L: 1 }, img: set(8) },
+  lesya:    { id: 'lesya',    no: '05', name: 'The Ivory Jumpsuit',            cat: 'Jumpsuits', sub: 'One-piece, minimalist and relaxed',                     price: 149, color: 'ivory',          badge: 'New',         sizes: { XS: 1, S: 1, M: 0, L: 1 }, img: set(4) },
+  mavka:    { id: 'mavka',    no: '06', name: 'The Olive Dress',               cat: 'Dresses',   sub: 'An elegant, understated silhouette',                    price: 139, color: 'olive',          badge: 'Best seller', sizes: { XS: 0, S: 1, M: 1, L: 1 }, img: set(5) },
+  vira:     { id: 'vira',     no: '07', name: 'The Linen Shirt',               cat: 'Shirts',    sub: 'Relaxed fit, timeless design',                          price: 89, color: 'ivory',          sizes: { XS: 1, S: 1, M: 1, L: 1 }, img: set(6) },
+  kalyna:   { id: 'kalyna',   no: '08', name: 'The Sand Wrap Dress',           cat: 'Dresses',   sub: 'Wrap-style shirt dress, natural and relaxed',           price: 155, color: 'sand',           badge: 'New',         sizes: { XS: 1, S: 1, M: 1, L: 0 }, img: set(7) },
 };
 
 export const LOOKS = {
-  hero:  { title: 'Zoria Linen Set', items: ['zoria'] },
-  cocoa: { title: 'Ivory over cocoa', items: ['vira', 'kora'] },
+  hero:  { title: 'The Essential Set', items: ['zoria'] },
+  cocoa: { title: 'Ivory over chocolate', items: ['vira', 'polissia'] },
 };
 
-export const FREE_SHIPPING = 5000; // demo threshold
+export const FREE_SHIPPING = 200; // demo threshold, USD
 
-export const money = n => '₴' + Math.round(n).toLocaleString('uk-UA').replace(/\s/g, ' ');
+export const money = n => '$' + Math.round(n).toLocaleString('en-US');
