@@ -1,9 +1,9 @@
-import { initShop } from './shop.js?v=261026125231';
-import { initProduct } from './product.js?v=261026125231';
-import { initCart } from './cart.js?v=261026125231';
-import { initCheckout } from './checkout.js?v=261026125231';
-import { initContent } from './content.js?v=261026125231';
-import { PRODUCTS, COLORS, LOOKS, FREE_SHIPPING, money } from './data.js?v=261026125231';
+import { initShop } from './shop.js?v=261026144635';
+import { initProduct } from './product.js?v=261026144635';
+import { initCart } from './cart.js?v=261026144635';
+import { initCheckout } from './checkout.js?v=261026144635';
+import { initContent } from './content.js?v=261026144635';
+import { PRODUCTS, COLORS, LOOKS, FREE_SHIPPING, money } from './data.js?v=261026144635';
 
 const gsap = window.gsap;
 const ScrollTrigger = window.ScrollTrigger;
@@ -485,12 +485,20 @@ function splitHeadings() {
   $$('.hero__title .ln').forEach(l => { l.innerHTML = [...l.textContent].map(c => `<span class="ch">${c === ' ' ? '&nbsp;' : c}</span>`).join(''); });
 }
 
+// Safety net: never let the loader / curtain trap the page
+setTimeout(() => {
+  if (!document.body.classList.contains('is-loading')) return;
+  document.body.classList.remove('is-loading');
+  loaderEl?.remove(); const pt = $('.pt'); if (pt) pt.style.visibility = 'hidden';
+  try { lenis?.start(); } catch {}
+}, 8000);
+
 if (reduce || !gsap) {
   loaderEl?.remove();
   $('.pt')?.remove();
   document.body.classList.remove('is-loading');
 } else {
-  boot();
+  boot().catch(err => { console.warn('[NIZHNIST] boot error', err); document.body.classList.remove('is-loading'); loaderEl?.remove(); const pt = $('.pt'); if (pt) pt.style.visibility = 'hidden'; lenis?.start?.(); });
 }
 
 async function boot() {
@@ -525,7 +533,7 @@ async function boot() {
     Promise.all(first.map(img => (img.complete ? Promise.resolve() : new Promise(r => { img.addEventListener('load', r, { once: true }); img.addEventListener('error', r, { once: true }); })).then(() => setP(++loaded / first.length)))),
     new Promise(r => setTimeout(r, 6000)),
   ]);
-  try { await Promise.all(first.map(i => i.decode?.().catch(() => {}))); } catch {}
+  try { await Promise.race([Promise.all(first.map(i => i.decode?.().catch(() => {}))), new Promise(r => setTimeout(r, 1200))]); } catch {}
   setP(1);
   ScrollTrigger.refresh();
   await new Promise(r => setTimeout(r, isHome && !internalNav ? 650 : 60));
