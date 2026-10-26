@@ -1,3 +1,5 @@
+import { initShop } from './shop.js';
+import { initProduct } from './product.js';
 import { PRODUCTS, COLORS, LOOKS, FREE_SHIPPING, money } from './data.js';
 
 const gsap = window.gsap;
@@ -7,6 +9,11 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 const SIZES = ['XS', 'S', 'M', 'L'];
+const PAGE = document.body.dataset.page || 'home';
+const isHome = PAGE === 'home';
+const internalNav = (() => { try { const v = sessionStorage.getItem('nz-nav'); sessionStorage.removeItem('nz-nav'); return v === '1'; } catch { return false; } })();
+if (internalNav && isHome) document.documentElement.classList.add('nz-internal');
+export const productURL = id => `product.html?p=${id}`;
 
 /* ---------------------------------------------------------
    Storage (wrapped — storage may be unavailable)
@@ -38,7 +45,7 @@ function cardHTML(p, i) {
   <article class="card" data-id="${p.id}">
     <span class="card__idx" aria-hidden="true">${String(i + 1).padStart(2, '0')}</span>
     <div class="card__media" data-gl data-alt="${p.img.alt}" data-focus="0.5,0.4">
-      <a href="#" class="card__link" aria-label="View ${p.name}">
+      <a href="${productURL(p.id)}" class="card__link" aria-label="View ${p.name}">
         <img class="main" src="${p.img.front}" alt="${p.name} in ${c.name.toLowerCase()} linen — front view" width="960" height="1280" ${lazy}>
         <img class="alt" src="${p.img.alt}" alt="" width="960" height="1280" loading="lazy">
       </a>
@@ -50,7 +57,7 @@ function cardHTML(p, i) {
       </div>
     </div>
     <div class="card__info">
-      <h3 class="card__name"><a href="#">${p.name}</a></h3>
+      <h3 class="card__name"><a href="${productURL(p.id)}">${p.name}</a></h3>
       <span class="card__price">${money(p.price)}</span>
       <p class="card__sub">${p.sub}</p>
       <div class="card__colors"><span class="swatch is-active" style="--c:${c.hex}" aria-hidden="true"></span>${c.name}</div>
@@ -248,7 +255,6 @@ document.addEventListener('click', e => {
       renderCart(); openUI('cart');
     }, 550);
   }
-  if (e.target.closest('.card__link, .card__name a')) { e.preventDefault(); openQV(id); }
 });
 
 /* ---------------------------------------------------------
@@ -323,6 +329,7 @@ function openQV(id) {
   $('.qv__sizes').innerHTML = SIZES.map(s => `<button class="size" role="radio" aria-checked="false" data-size="${s}" ${p.sizes[s] ? '' : 'aria-disabled="true" title="Sold out"'}>${s}${p.sizes[s] ? '' : '<small>Sold out</small>'}</button>`).join('');
   $('.qv__err').textContent = '';
   const w = $('.qv__wish'); w.setAttribute('aria-pressed', wish.includes(id)); $('span', w).textContent = wish.includes(id) ? 'Saved to wishlist' : 'Save to wishlist';
+  $('.qv__more').href = productURL(id);
   $('.qv').scrollTop = 0;
   openUI('qv');
   if (gsap && !reduce) gsap.fromTo('.qv__gallery figure, .qv__info > *', { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: .8, stagger: .04, ease: 'expo.out', delay: .25 });
@@ -355,7 +362,7 @@ function renderSearch() {
   const list = Object.values(PRODUCTS).filter(p =>
     !term || [p.name, p.cat, p.sub, COLORS[p.color].name].join(' ').toLowerCase().includes(term));
   $('.search__results').innerHTML = list.length
-    ? list.slice(0, 10).map(p => `<a href="#" class="sr-card" data-qv="${p.id}"><img src="${p.img.front}" alt="${p.name}" loading="lazy" width="960" height="1280"><p>${p.name}</p><span>${money(p.price)} · ${COLORS[p.color].name}</span></a>`).join('')
+    ? list.slice(0, 10).map(p => `<a href="${productURL(p.id)}" class="sr-card"><img src="${p.img.front}" alt="${p.name}" loading="lazy" width="960" height="1280"><p>${p.name}</p><span>${money(p.price)} · ${COLORS[p.color].name}</span></a>`).join('')
     : `<div class="empty"><h3>No results for “${q.value.replace(/</g, '&lt;')}”</h3><p>Try “dress”, “set” or a colour like “olive”.</p></div>`;
 }
 q.addEventListener('input', renderSearch);
@@ -365,7 +372,7 @@ renderSearch();
 /* ---------------------------------------------------------
    Newsletter
    --------------------------------------------------------- */
-$('.news__form').addEventListener('submit', e => {
+$('.news__form')?.addEventListener('submit', e => {
   e.preventDefault();
   const f = e.currentTarget, v = $('input', f).value.trim(), msg = $('.field__msg', f);
   f.classList.remove('is-error', 'is-ok');
@@ -388,6 +395,29 @@ burger.addEventListener('click', () => {
   if (open && gsap && !reduce) gsap.fromTo('.mmenu nav a', { yPercent: 60, opacity: 0 }, { yPercent: 0, opacity: 1, duration: .8, stagger: .06, ease: 'expo.out', delay: .25 });
 });
 $$('.mmenu a').forEach(a => a.addEventListener('click', closeMenu));
+
+/* ---------------------------------------------------------
+   Page modules (shop / product) + page transitions
+   --------------------------------------------------------- */
+const ctx = { $, $$, PRODUCTS, COLORS, SIZES, money, cardHTML, addToCart, renderCart, openUI, closeUI, toast, toggleWish, syncHearts, isWished: id => wish.includes(id), openQV, productURL, gsap, reduce, store };
+let pageIntro = null;
+if (PAGE === 'shop') ({ intro: pageIntro } = initShop(ctx) || {});
+if (PAGE === 'product') ({ intro: pageIntro } = initProduct(ctx) || {});
+
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[href]');
+  if (!a || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || a.target === '_blank') return;
+  const url = new URL(a.href, location.href);
+  if (url.origin !== location.origin || !/\.html$|\/$/.test(url.pathname) || (url.pathname === location.pathname && url.search === location.search)) return;
+  e.preventDefault();
+  try { sessionStorage.setItem('nz-nav', '1'); } catch {}
+  const pt = $('.pt');
+  if (!pt || reduce || !gsap) { location.href = url.href; return; }
+  closeUI(true); $('.scrim')?.classList.remove('is-on');
+  pt.style.visibility = 'visible';
+  gsap.fromTo(pt, { yPercent: 100 }, { yPercent: 0, duration: .75, ease: 'expo.inOut', onComplete: () => { location.href = url.href; } });
+});
+window.addEventListener('pageshow', e => { if (e.persisted) { const pt = $('.pt'); if (pt) { gsap?.set(pt, { yPercent: -100 }); pt.style.visibility = 'hidden'; } } });
 
 updateCounts(); syncHearts();
 
@@ -435,7 +465,8 @@ function splitHeadings() {
 }
 
 if (reduce || !gsap) {
-  loaderEl.remove();
+  loaderEl?.remove();
+  $('.pt')?.remove();
   document.body.classList.remove('is-loading');
 } else {
   boot();
@@ -454,7 +485,8 @@ async function boot() {
   lenis.on('scroll', ScrollTrigger.update);
 
   // Loader progress
-  const count = $('.loader__count'), bar = $('.loader__bar i'), logo = $('.loader__logo');
+  if (!isHome || internalNav) loaderEl?.classList.add('is-skip');
+  const count = $('.loader__count') || {}, bar = $('.loader__bar i') || { style: {} }, logo = $('.loader__logo') || { style: {} };
   const prog = { v: 0 };
   let target = 0;
   const setP = p => { target = Math.max(target, p); };
@@ -466,7 +498,7 @@ async function boot() {
   });
 
   // Preload the first screen of imagery (drives the loader)
-  const first = [$('.hero__media img'), ...$$('#featured .card__media .main').slice(0, 2)].filter(Boolean);
+  const first = [$('.hero__media img'), ...$$('[data-first] img, #featured .card__media .main').slice(0, 3)].filter(Boolean);
   let loaded = 0;
   await Promise.race([
     Promise.all(first.map(img => (img.complete ? Promise.resolve() : new Promise(r => { img.addEventListener('load', r, { once: true }); img.addEventListener('error', r, { once: true }); })).then(() => setP(++loaded / first.length)))),
@@ -475,7 +507,7 @@ async function boot() {
   try { await Promise.all(first.map(i => i.decode?.().catch(() => {}))); } catch {}
   setP(1);
   ScrollTrigger.refresh();
-  await new Promise(r => setTimeout(r, 650));
+  await new Promise(r => setTimeout(r, isHome && !internalNav ? 650 : 60));
   gsap.ticker.remove(progTween);
 
   // Frame loop: Lenis → GL
@@ -499,9 +531,20 @@ function heroInset(collapsed) {
 
 function intro() {
   const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
-  tl.to('.loader__inner', { y: -24, opacity: 0, duration: .6, ease: 'power2.in' })
-    .to(loaderEl, { clipPath: 'inset(0 0 100% 0)', duration: 1.1, ease: 'expo.inOut' }, '-=.15')
-    .add(() => { document.body.classList.remove('is-loading'); lenis.start(); });
+  if (!isHome) {
+    tl.to('.pt', { yPercent: -100, duration: 1, ease: 'expo.inOut' })
+      .add(() => { document.body.classList.remove('is-loading'); lenis.start(); $('.pt').style.visibility = 'hidden'; }, .35)
+      .from('.page-intro > *', { y: 24, opacity: 0, duration: 1, stagger: .07, ease: 'expo.out' }, .45);
+    pageIntro?.(tl);
+    return;
+  }
+  if (loaderEl && !internalNav) {
+    tl.to('.loader__inner', { y: -24, opacity: 0, duration: .6, ease: 'power2.in' })
+      .to(loaderEl, { clipPath: 'inset(0 0 100% 0)', duration: 1.1, ease: 'expo.inOut' }, '-=.15');
+  } else {
+    tl.to('.pt', { yPercent: -100, duration: 1, ease: 'expo.inOut' }).set('.pt', { visibility: 'hidden' });
+  }
+  tl.add(() => { document.body.classList.remove('is-loading'); lenis.start(); loaderEl?.remove(); });
   tl.fromTo('.hero__frame', { clipPath: () => heroInset(true) }, { clipPath: () => heroInset(), duration: 1.8, ease: 'expo.inOut' }, '-=.75')
     .fromTo('.hero__media img', { scale: 1.18 }, { scale: 1, duration: 2.2, ease: 'expo.out' }, '<')
     .from('.hero__title .ch', { yPercent: 105, duration: 1.4, stagger: .03, ease: 'expo.out' }, '-=1.7')
@@ -514,7 +557,7 @@ function scrollScenes() {
   // Header compact state
   ScrollTrigger.create({ start: 60, end: 'max', onToggle: s => header.classList.toggle('is-scrolled', s.isActive) });
 
-  // Hero text drifts as the image folds away
+  if (isHome) {
   // Hero: the window opens to full bleed, then the next section slides over it
   const frame = $('.hero__frame'), himg = $('.hero__media img');
   gsap.set(himg, { xPercent: -10 }); // keeps the model centred inside the narrow window
@@ -529,6 +572,8 @@ function scrollScenes() {
   // Dark statement opens like a panel
   gsap.fromTo('.statement', { clipPath: 'inset(8% 6% 0% 6%)' }, { clipPath: 'inset(0% 0% 0% 0%)', ease: 'none',
     scrollTrigger: { trigger: '.statement', start: 'top bottom', end: 'top 25%', scrub: .6 } });
+
+  }
 
   // Image reveals: a clean curtain + settle (compositor-only: clip-path + transform)
   $$('[data-gl]:not([data-gl="editorial"])').forEach(el => {
@@ -552,6 +597,7 @@ function scrollScenes() {
   $$('[data-reveal]').forEach(el => gsap.from(el, { y: 18, opacity: 0, duration: .8, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 90%', once: true } }));
   $$('.card__info').forEach(el => gsap.from(el, { y: 14, opacity: 0, duration: .7, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 95%', once: true } }));
 
+  if (isHome) {
   // Statement: words fill in as you read
   gsap.to('.statement__big .w', { opacity: 1, stagger: .05, ease: 'none', scrollTrigger: { trigger: '.statement__big', start: 'top 78%', end: 'bottom 45%', scrub: true } });
   // Details: scattered frames drift at different depths
@@ -592,14 +638,18 @@ function scrollScenes() {
     });
   });
 
+  }
+
   // Footer wordmark
   gsap.from('.fshot, .fpanel', { y: 60, opacity: 0, duration: 1.1, stagger: .1, ease: 'expo.out', scrollTrigger: { trigger: '.footer', start: 'top 80%', once: true } });
   gsap.fromTo('.fshot__img img', { yPercent: -6, scale: 1.12 }, { yPercent: 6, scale: 1.12, ease: 'none', scrollTrigger: { trigger: '.footer', start: 'top bottom', end: 'bottom bottom', scrub: true } });
 
   window.addEventListener('load', () => ScrollTrigger.refresh());
   // Anchor links via Lenis
-  $$('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
-    const id = a.getAttribute('href');
+  $$('a[href*="#"]').forEach(a => a.addEventListener('click', e => {
+    const url = new URL(a.href, location.href);
+    if (url.pathname !== location.pathname) return;
+    const id = url.hash;
     if (id.length < 2) return;
     const t = $(id); if (!t) return;
     e.preventDefault(); closeUI(); closeMenu();
@@ -712,7 +762,7 @@ function interactions() {
   }
 
   // Card hover: close the quick-add tray when leaving
-  $$('.card').forEach(card => card.addEventListener('mouseleave', () => $('.quick', card).classList.remove('is-open')));
+  document.addEventListener('mouseover', e => { const c = e.target.closest('.card'); $$('.quick.is-open').forEach(q => { if (!c || !c.contains(q)) { q.classList.remove('is-open'); $('.quick__btn', q)?.setAttribute('aria-expanded', 'false'); } }); });
 
   // Linen fabric swatches
   const fabric = $('.linen__canvas');
@@ -722,8 +772,8 @@ function interactions() {
   }));
 
   // Category hover image
-  const fl = $('.cats__float'), flImg = $('img', fl);
-  if (finePointer) {
+  const fl = $('.cats__float'), flImg = fl && $('img', fl);
+  if (fl && finePointer) {
     const xTo = gsap.quickTo(fl, 'x', { duration: .6, ease: 'power3' }), yTo = gsap.quickTo(fl, 'y', { duration: .6, ease: 'power3' });
     const list = $('.cats__list');
     list.addEventListener('mousemove', e => { xTo(e.clientX + 140); yTo(e.clientY); });

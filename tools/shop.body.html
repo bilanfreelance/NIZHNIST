@@ -1,0 +1,70 @@
+  <section class="page-intro wrap shop-intro">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><span>/</span><span aria-current="page">Shop</span></nav>
+    <p class="eyebrow"><span class="num">(SS26)</span>The collection</p>
+    <h1 class="shop-title">The Linen <em>Edit</em></h1>
+    <p class="shop-lead">Thoughtfully designed linen pieces for slower mornings, warmer days and everyday freedom.</p>
+  </section>
+
+  <div class="shop-bar" role="region" aria-label="Catalogue controls">
+    <div class="wrap shop-bar__in">
+      <div class="cat-tabs" role="tablist" aria-label="Categories">
+        <button class="cat-tab" role="tab" data-cat="All">All pieces <span class="cat-tab__n"></span></button>
+        <button class="cat-tab" role="tab" data-cat="Sets">Sets <span class="cat-tab__n"></span></button>
+        <button class="cat-tab" role="tab" data-cat="Dresses">Dresses <span class="cat-tab__n"></span></button>
+        <button class="cat-tab" role="tab" data-cat="Shirts">Shirts <span class="cat-tab__n"></span></button>
+        <button class="cat-tab" role="tab" data-cat="Jumpsuits">Jumpsuits <span class="cat-tab__n"></span></button>
+      </div>
+      <div class="shop-tools">
+        <div class="ftools-inline">
+          <div class="fgroup" data-fgroup="color" aria-label="Colour"></div>
+          <div class="fgroup" data-fgroup="size" aria-label="Size"></div>
+        </div>
+        <button class="tool filter-btn" aria-label="Filters"><svg viewBox="0 0 24 24"><path d="M4 7h16M7 12h10M10 17h4"/></svg>Filter <span class="filter-btn__n"></span></button>
+        <div class="sort">
+          <button class="tool sort-btn" aria-haspopup="listbox" aria-expanded="false">Sort: <span class="sort-btn__v">Featured</span><svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></svg></button>
+          <ul class="sort-list" role="listbox" aria-label="Sort by">
+            <li><button class="sort-opt" role="option" data-sort="featured" aria-checked="true">Featured</button></li>
+            <li><button class="sort-opt" role="option" data-sort="new" aria-checked="false">Newest</button></li>
+            <li><button class="sort-opt" role="option" data-sort="price-asc" aria-checked="false">Price: Low to High</button></li>
+            <li><button class="sort-opt" role="option" data-sort="price-desc" aria-checked="false">Price: High to Low</button></li>
+          </ul>
+        </div>
+        <div class="cols" role="group" aria-label="Grid density">
+          <button class="cols-btn" data-cols="2" aria-pressed="false" aria-label="Large images"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="7" height="14"/><rect x="13" y="5" width="7" height="14"/></svg></button>
+          <button class="cols-btn" data-cols="4" aria-pressed="true" aria-label="Compact grid"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="3.5" height="14"/><rect x="8.2" y="5" width="3.5" height="14"/><rect x="13.4" y="5" width="3.5" height="14"/><rect x="18.6" y="5" width="2.4" height="14"/></svg></button>
+        </div>
+      </div>
+    </div>
+    <div class="wrap shop-bar__sub"><span class="shop-count" aria-live="polite"></span><div class="active-filters"></div></div>
+  </div>
+
+  <section class="wrap shop-list" aria-label="Products">
+    <div class="shop-grid" data-cols="4"></div>
+  </section>
+
+  <section class="wrap recent" hidden aria-label="Recently viewed">
+    <h2 class="recent__t">Recently viewed</h2>
+    <div class="recent__grid"></div>
+  </section>
+
+  <section class="news" aria-label="Newsletter">
+
+    <div class="wrap news__inner">
+      <div class="news__copy">
+        <p class="eyebrow" data-reveal>Letters from NIZHNIST</p>
+        <h2 class="h2 h2--news" data-split>Slow news, once a month.</h2>
+        <p class="news__lead" data-reveal>A letter from the sunny side of linen — new pieces before anyone else, notes from our atelier and small rituals for slower days.</p>
+        <form class="news__form" novalidate>
+          <label for="nl-email" class="sr">Email address</label>
+          <div class="field">
+            <input id="nl-email" type="email" name="email" placeholder="Your email address" autocomplete="email" required>
+            <button type="submit" class="btn btn--dark"><span>Subscribe</span></button>
+          </div>
+          <p class="field__msg" role="status" aria-live="polite"></p>
+          <p class="news__small">By subscribing you agree to our Privacy Policy. Unsubscribe anytime.</p>
+        </form>
+        <ul class="news__perks" data-reveal><li>Early access to new collections</li><li>Linen care notes</li><li>No noise, ever</li></ul>
+      </div>
+      <blockquote class="news__quote" data-reveal><p>“Linen remembers<br>the shape of your <em>summer.</em>”</p><cite>— NIZHNIST atelier</cite></blockquote>
+    </div>
+  </section>

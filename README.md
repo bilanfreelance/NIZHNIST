@@ -22,6 +22,13 @@ Quick add with size selection · sold-out sizes · mini cart drawer (qty, remove
 
 Accessibility: keyboard focus states, Escape/scrim close, focus trap in drawers, `prefers-reduced-motion` disables WebGL and smooth scroll (falls back to plain optimized images).
 
+## Pages
+- `index.html` — homepage
+- `shop.html` — catalogue: category tabs, colour/size filters (drawer on mobile), sorting, 2/4-column density toggle, editorial pause, empty state, recently viewed. Deep-links: `shop.html?cat=Dresses&color=olive&sort=price-asc`
+- `product.html?p=<id>` — product page: four large stacked images + lightbox (keyboard/swipe), sticky purchase panel, size validation, size guide drawer, accordions, complete-your-look, sticky add-to-bag on mobile
+
+`shop.html` and `product.html` share header, drawers and footer with `index.html`; after editing those parts run `python3 tools/build_pages.py`.
+
 ## Structure
 ```
 index.html
