@@ -624,6 +624,7 @@ html{scrollbar-gutter:stable}
 /* ---------- Hero v2: minimal editorial composition ---------- */
 .hero{height:100vh;height:100svh;min-height:640px;background:var(--ivory);overflow:hidden}
 .hero__frame{position:absolute;left:50%;top:calc(var(--header-h) + 6vh);bottom:9vh;width:clamp(280px,29vw,560px);transform:translateX(-50%);z-index:1}
+
 .hero__frame .hero__media{position:absolute;inset:0;overflow:hidden}
 .hero__frame .hero__media img{width:100%;height:100%;object-fit:cover;object-position:77% 50%}
 html:not(.gl-on) .hero__frame .hero__media{background:#E9E3D6}
@@ -1031,3 +1032,69 @@ main > section.news > .wrap{position:relative;z-index:3}
   .details__title{position:relative;left:auto;top:auto;grid-column:1/-1;order:-1;font-size:56px;margin-bottom:12px}
 }
 .gl{inset:0;width:100%;height:100%}
+.inl{will-change:clip-path}
+
+/* Newsletter v3 — minimal, typographic */
+.news{min-height:0;display:block;background:var(--ivory);padding:clamp(110px,12vw,200px) 0;border-top:1px solid var(--line)}
+.news__inner{align-items:end}
+.news__copy{grid-column:1 / span 7;color:var(--ink)}
+.news__copy .eyebrow{color:var(--muted)}
+.news__copy .eyebrow .num{color:var(--olive)}
+.news .h2--news{color:var(--ink);font-size:clamp(60px,8.4vw,160px)}
+.news__lead{color:var(--muted)}
+.news .field{border-color:var(--ink)}
+.news .field input{color:var(--ink)}
+.news .field input::placeholder{color:var(--muted)}
+.news .field .btn{background:var(--ink);color:var(--ivory)}
+.news .field .btn:hover{color:var(--ivory)}
+.news .news__small{color:var(--muted)}
+.news .news__form.is-ok .field__msg{color:var(--olive)}
+.news .news__form.is-error .field__msg{color:#A3472F}
+.news__perks{color:var(--ink)}
+.news__perks li::before{color:var(--olive)}
+.news__quote{grid-column:9 / span 4;color:var(--ink);border-left:1px solid var(--line);padding:0 0 8px 28px;text-align:left}
+.news__quote em{color:var(--olive)}
+.news__quote cite{color:var(--muted)}
+
+/* =========================================================
+   One button system for every product surface — the "chip"
+   ========================================================= */
+:root{--chip-h:40px;--chip-bg:rgba(244,241,233,.94);--chip-fs:12px}
+.quick__btn,.wish-btn,.fshot__qv,.hotspot__tag,.quick .size{height:var(--chip-h);background:var(--chip-bg);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:var(--ink);font-family:var(--ff);font-size:var(--chip-fs);font-weight:600;letter-spacing:.03em;border:0;border-radius:2px;transition:background-color .35s var(--ease-out),color .35s var(--ease-out),transform .45s var(--ease-out)}
+.quick__btn:hover,.wish-btn:hover,.fshot:hover .fshot__qv,.hotspot:hover .hotspot__tag,.quick .size:not([aria-disabled]):hover{background:var(--olive);color:var(--ivory)}
+.wish-btn:hover svg{stroke:var(--ivory)}
+/* Quick add: chip bottom-left; sizes slide out beside it */
+.quick{left:12px;right:auto;bottom:12px;display:flex;align-items:center;gap:4px;background:none;-webkit-backdrop-filter:none;backdrop-filter:none;transform:translateY(calc(100% + 16px))}
+.quick__btn{width:auto;padding:0 14px;gap:10px;display:inline-flex;align-items:center;justify-content:flex-start}
+.quick__btn span{display:inline}
+.quick__btn svg{width:14px;height:14px}
+.quick__sizes{display:flex;gap:4px;max-height:none;max-width:0;overflow:hidden;background:none;border:0;transition:max-width .5s var(--ease-out)}
+.quick.is-open .quick__sizes{max-width:200px}
+.quick .size{width:var(--chip-h);flex:none;display:grid;place-items:center}
+.quick .size[aria-disabled="true"]{background:var(--chip-bg);color:#B9B7AE}
+.quick .size.is-loading{background:var(--ink)}
+.quick:not(.is-open) .quick__sizes{border-top:0}
+/* Wishlist: square chip top-right */
+.wish-btn{right:12px;top:12px;width:var(--chip-h);display:grid;place-items:center}
+.wish-btn svg{width:17px;height:17px}
+/* Badge aligned to the same grid */
+.card__badge{left:12px;top:12px;height:26px;display:inline-flex;align-items:center;padding:0 10px;font-size:10px;letter-spacing:.1em;border-radius:2px}
+.grid--featured .card__badge{left:12px;top:12px}
+/* Footer quick view */
+.fshot__qv{left:12px;bottom:12px;padding:0 14px}
+/* Hotspots: the same chip, "+" first */
+.hotspot{transform:translate(-14px,-20px)}
+.hotspot i{width:var(--chip-h);height:var(--chip-h);border-radius:2px;background:var(--ink);box-shadow:none}
+.hotspot__plus::before,.hotspot__plus::after{background:var(--ivory)}
+.hotspot__tag{margin-left:2px;padding:0 14px;display:inline-flex;align-items:center}
+.hotspot__tag em{color:var(--muted);font-weight:500}
+.hotspot:hover .hotspot__tag em{color:var(--olive-pale)}
+.hotspot:hover i{transform:none;background:var(--olive)}
+@media (max-width:900px){
+  .quick{transform:none;left:12px;right:auto;bottom:12px;width:auto;background:none}
+  .quick__btn{width:auto;height:var(--chip-h);border-radius:2px;padding:0 12px}
+  .quick__btn span{display:none}
+  .quick.is-open{left:12px;background:none}
+  .quick.is-open .quick__btn{width:auto;padding:0 12px;justify-content:center}
+  .quick.is-open .quick__btn span{display:none}
+}

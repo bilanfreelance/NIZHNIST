@@ -512,6 +512,7 @@ function scrollScenes(gl) {
   // Hero text drifts as the image folds away
   // Hero: the window opens to full bleed, then the next section slides over it
   const frame = $('.hero__frame');
+  gsap.set(frame, { xPercent: -50, x: 0 }); // centre via GSAP so later scale tweens keep it centred
   const htl = gsap.timeline({ scrollTrigger: { trigger: '.hero', start: 'top top', end: () => '+=' + window.innerHeight * .6, scrub: .8, invalidateOnRefresh: true } });
   htl.to(frame, { top: 0, bottom: 0, width: () => document.documentElement.clientWidth, ease: 'power2.inOut', duration: 1 }, 0)
      .to('.hero__title .line--a', { xPercent: -60, opacity: 0, ease: 'power2.in', duration: .7 }, 0)
@@ -546,11 +547,11 @@ function scrollScenes(gl) {
     const el = $('.details--scatter ' + s); if (!el) return;
     gsap.fromTo(el, { y: -d }, { y: d, ease: 'none', scrollTrigger: { trigger: '.details--scatter', start: 'top bottom', end: 'bottom top', scrub: .6 } });
   });
-  // Inline images open up inside the sentence as you read
-  $$('.statement__big .inl').forEach((el, i) => {
-    gsap.timeline({ scrollTrigger: { trigger: el, start: 'top 85%', end: 'top 45%', scrub: .8 } })
-      .fromTo(el, { width: 0 }, { width: () => el.dataset.w || '1.9em', ease: 'power2.inOut' }, 0)
-      .fromTo($('img', el), { scale: 1.35 }, { scale: 1, ease: 'power2.out' }, 0);
+  // Inline images reveal inside the sentence (clip only — the text never reflows)
+  $$('.statement__big .inl').forEach(el => {
+    gsap.timeline({ scrollTrigger: { trigger: el, start: 'top 88%', end: 'top 55%', scrub: .8 } })
+      .fromTo(el, { clipPath: 'inset(0 50% 0 50%)' }, { clipPath: 'inset(0 0% 0 0%)', ease: 'power2.inOut' }, 0)
+      .fromTo($('img', el), { scale: 1.3 }, { scale: 1, ease: 'power2.out' }, 0);
   });
 
   // Editorial: zoom through the letters of “Linen” into the image
@@ -573,8 +574,8 @@ function scrollScenes(gl) {
     const track = $('.best__track');
     const dist = () => Math.max(0, track.scrollWidth - document.documentElement.clientWidth);
     gsap.to(track, {
-      x: () => -dist(), ease: 'none',
-      scrollTrigger: { trigger: '.best__pin', start: 'top top', end: () => '+=' + dist(), pin: true, scrub: true, invalidateOnRefresh: true, anticipatePin: 1,
+      x: () => -dist(), ease: 'none', force3D: true,
+      scrollTrigger: { trigger: '.best__pin', start: 'top top', end: () => '+=' + dist(), pin: true, pinSpacing: true, scrub: .6, invalidateOnRefresh: true, fastScrollEnd: false,
         onUpdate: s => ($('.best__progress i').style.transform = `scaleX(${s.progress})`) },
     });
   });

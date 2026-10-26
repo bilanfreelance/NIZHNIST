@@ -274,9 +274,7 @@ export class GL {
         const rel = ((r.top + r.height / 2) - H / 2) / H;
         u.uPar.value = Math.max(-1, Math.min(1, rel)) * it.par * .5;
       }
-      // colour develops as the image approaches the centre of the viewport
-      const relc = Math.abs(((r.top + r.height / 2) - H / 2) / (H / 2 + r.height / 2));
-      u.uDev.value = 1 - Math.min(1, Math.max(0, (relc - .25) / .75));
+      u.uDev.value = 1;
       if (it.sheenOn) { it.sheen = Math.min(1, (it.sheen || 0) + dt * .85); u.uSheen.value = it.sheen; if (it.sheen >= 1) { it.sheenOn = false; u.uSheen.value = 0; } }
       it.hover = lerp(it.hover, it.hoverT, it.hoverT ? .06 : .09);
       u.uHover.value = it.hover;
