@@ -400,7 +400,7 @@ function fitText() {
 }
 fitText();
 
-let fitT; window.addEventListener('resize', () => { clearTimeout(fitT); fitT = setTimeout(() => { fitText(); window.ScrollTrigger?.refresh(); }, 150); });
+let fitT, lastW = window.innerWidth; window.addEventListener('resize', () => { if (window.innerWidth === lastW) return; lastW = window.innerWidth; clearTimeout(fitT); fitT = setTimeout(() => { fitText(); window.ScrollTrigger?.refresh(); }, 150); });
 
 /* ---------------------------------------------------------
    Motion
@@ -427,12 +427,13 @@ if (reduce || !gsap) {
 
 async function boot() {
   gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.config({ ignoreMobileResize: true });
   document.body.classList.add('is-loading');
   try { await Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 2500))]); } catch {}
   splitHeadings(); fitText();
 
   // Smooth scroll
-  lenis = new window.Lenis({ lerp: .085, smoothWheel: true, wheelMultiplier: .95, touchMultiplier: 1.4 });
+  lenis = new window.Lenis({ prevent: n => !!n.closest?.('.drawer, .search, .mmenu'), lerp: .085, smoothWheel: true, wheelMultiplier: .95, touchMultiplier: 1.4 });
   lenis.stop();
   lenis.on('scroll', ScrollTrigger.update);
 

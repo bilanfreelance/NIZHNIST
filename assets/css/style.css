@@ -26,7 +26,7 @@
 html{-webkit-text-size-adjust:100%;scroll-behavior:auto}
 html.lenis,html.lenis body{height:auto}
 .lenis.lenis-smooth{scroll-behavior:auto!important}
-.lenis.lenis-stopped{overflow:hidden}
+
 body{
   margin:0;background:var(--white);color:var(--ink);
   font-family:var(--ff);font-size:16px;line-height:1.55;font-weight:400;
@@ -945,3 +945,15 @@ body{background:var(--ivory)}
   .qv__info{position:static;padding:24px 20px 40px}
 }
 input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none;display:none}
+
+/* Brand scrollbar */
+html{scrollbar-color:#B9B49F var(--ivory);scrollbar-width:thin}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:var(--ivory)}
+::-webkit-scrollbar-thumb{background:#C9C3AF;border:3px solid var(--ivory);border-radius:10px}
+::-webkit-scrollbar-thumb:hover{background:var(--olive)}
+.drawer ::-webkit-scrollbar-thumb,.qv::-webkit-scrollbar-thumb{border-color:var(--ivory)}
+/* Drawers: compositor-only motion */
+.drawer{will-change:transform}
+.scrim{will-change:opacity}
+.search{max-height:100vh;max-height:100svh;overscroll-behavior:contain}

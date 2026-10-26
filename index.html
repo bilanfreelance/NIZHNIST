@@ -54,7 +54,7 @@
 </header>
 
 <!-- Mobile menu -->
-<div class="mmenu" aria-hidden="true">
+<div class="mmenu" aria-hidden="true" data-lenis-prevent>
   <nav aria-label="Mobile">
     <a href="#featured">Shop</a>
     <a href="#lookbook">Collections</a>
@@ -294,7 +294,7 @@
 <aside class="drawer" id="cart" aria-label="Shopping bag" aria-hidden="true" tabindex="-1">
   <header class="drawer__head"><h2>Your bag <span data-count="cart">0</span></h2><button class="icon-btn" data-close aria-label="Close bag"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
   <div class="ship"><p class="ship__text"></p><div class="ship__bar"><i></i></div></div>
-  <div class="drawer__body cart__items"></div>
+  <div data-lenis-prevent class="drawer__body cart__items"></div>
   <footer class="drawer__foot cart__foot">
     <div class="cart__row"><span>Subtotal</span><strong class="cart__subtotal">$0</strong></div>
     <p class="cart__small">Taxes and shipping calculated at checkout.</p>
@@ -328,19 +328,19 @@
 
 <aside class="drawer" id="wishlist" aria-label="Wishlist" aria-hidden="true" tabindex="-1">
   <header class="drawer__head"><h2>Saved <span data-count="wish">0</span></h2><button class="icon-btn" data-close aria-label="Close wishlist"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
-  <div class="drawer__body wish__items"></div>
+  <div data-lenis-prevent class="drawer__body wish__items"></div>
 </aside>
 
 <aside class="drawer drawer--look" id="look" aria-label="Shop the look" aria-hidden="true" tabindex="-1">
   <header class="drawer__head"><h2>Shop the look</h2><button class="icon-btn" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
-  <div class="drawer__body look__panel"></div>
+  <div data-lenis-prevent class="drawer__body look__panel"></div>
   <footer class="drawer__foot">
     <p class="look__err" role="alert"></p>
     <button class="btn btn--dark btn--full look__all"><span>Add complete look</span><em class="look__total"></em></button>
   </footer>
 </aside>
 
-<div class="search" id="search" aria-hidden="true" role="dialog" aria-label="Search">
+<div class="search" id="search" aria-hidden="true" role="dialog" aria-label="Search" data-lenis-prevent>
   <div class="wrap search__inner">
     <div class="search__bar">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
