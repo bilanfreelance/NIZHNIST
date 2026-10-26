@@ -2,7 +2,7 @@
 import { INFO, SIZE_CHART } from './data.js';
 
 export function initProduct(ctx) {
-  const { $, $$, PRODUCTS, COLORS, SIZES, money, cardHTML, addToCart, renderCart, openUI, toast, toggleWish, isWished, gsap, reduce, store, productURL } = ctx;
+  const { swatchHTML, $, $$, PRODUCTS, COLORS, SIZES, money, cardHTML, addToCart, renderCart, openUI, toast, toggleWish, isWished, gsap, reduce, store, productURL } = ctx;
   const root = $('.pdp');
   if (!root) return;
 
@@ -39,7 +39,7 @@ export function initProduct(ctx) {
   $('.pdp__desc').textContent = info.desc;
   $('.pdp__pieces').innerHTML = info.pieces ? `<span>Includes</span>${info.pieces.map(x => `<b>${x}</b>`).join('<i>+</i>')}` : '';
   $('.pdp__pieces').hidden = !info.pieces;
-  $('.pdp__color').innerHTML = `<span class="swatch is-active" style="--c:${c.hex}"></span>Colour <b>${c.name}</b>`;
+  $('.pdp__color').innerHTML = `${swatchHTML(p.color)}Colour <b>${c.name}</b>`;
   $('.pdp__sizes').innerHTML = SIZES.map(s => `<button class="size" role="radio" aria-checked="false" data-size="${s}" ${p.sizes[s] ? '' : 'aria-disabled="true"'}>${s}${p.sizes[s] ? '' : '<small>Sold out</small>'}</button>`).join('');
   $('.pdp__fit').textContent = info.fit;
   $('.acc-desc').textContent = `${info.desc} ${info.pieces ? 'Sold as a set — both pieces in one size.' : ''}`;

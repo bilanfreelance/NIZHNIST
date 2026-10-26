@@ -13,6 +13,9 @@ const PAGE = document.body.dataset.page || 'home';
 const isHome = PAGE === 'home';
 const internalNav = (() => { try { const v = sessionStorage.getItem('nz-nav'); sessionStorage.removeItem('nz-nav'); return v === '1'; } catch { return false; } })();
 if (internalNav && isHome) document.documentElement.classList.add('nz-internal');
+export const swatchHTML = (key, active = true) => key === 'ivoryChocolate'
+  ? `<span class="swatch2" aria-hidden="true"><span class="swatch${active ? ' is-active' : ''}" style="--c:${COLORS.ivory.hex}"></span><span class="swatch" style="--c:${COLORS.chocolate.hex}"></span></span>`
+  : `<span class="swatch${active ? ' is-active' : ''}" style="--c:${COLORS[key].hex}" aria-hidden="true"></span>`;
 export const productURL = id => `product.html?p=${id}`;
 
 /* ---------------------------------------------------------
@@ -60,7 +63,7 @@ function cardHTML(p, i) {
       <h3 class="card__name"><a href="${productURL(p.id)}">${p.name}</a></h3>
       <span class="card__price">${money(p.price)}</span>
       <p class="card__sub">${p.sub}</p>
-      <div class="card__colors"><span class="swatch is-active" style="--c:${c.hex}" aria-hidden="true"></span>${c.name}</div>
+      <div class="card__colors">${swatchHTML(p.color)}${c.name}</div>
     </div>
   </article>`;
 }
@@ -325,7 +328,7 @@ function openQV(id) {
   $('.qv__p').textContent = money(p.price);
   $('.qv__sub').textContent = p.sub;
   $('.qv__desc').textContent = `${p.sub}. Cut from natural linen with a relaxed, easy drape — designed to feel light on warm days and to soften with every wear.`;
-  $('.qv__color').innerHTML = `<span class="swatch is-active" style="--c:${c.hex}"></span>Colour: <b>${c.name}</b>`;
+  $('.qv__color').innerHTML = `${swatchHTML(p.color)}Colour: <b>${c.name}</b>`;
   $('.qv__sizes').innerHTML = SIZES.map(s => `<button class="size" role="radio" aria-checked="false" data-size="${s}" ${p.sizes[s] ? '' : 'aria-disabled="true" title="Sold out"'}>${s}${p.sizes[s] ? '' : '<small>Sold out</small>'}</button>`).join('');
   $('.qv__err').textContent = '';
   const w = $('.qv__wish'); w.setAttribute('aria-pressed', wish.includes(id)); $('span', w).textContent = wish.includes(id) ? 'Saved to wishlist' : 'Save to wishlist';
@@ -410,7 +413,7 @@ document.addEventListener('click', e => { if (mega && !mega.contains(e.target)) 
 /* ---------------------------------------------------------
    Page modules (shop / product) + page transitions
    --------------------------------------------------------- */
-const ctx = { $, $$, PRODUCTS, COLORS, SIZES, money, cardHTML, addToCart, renderCart, openUI, closeUI, toast, toggleWish, syncHearts, isWished: id => wish.includes(id), openQV, productURL, gsap, reduce, store };
+const ctx = { swatchHTML, $, $$, PRODUCTS, COLORS, SIZES, money, cardHTML, addToCart, renderCart, openUI, closeUI, toast, toggleWish, syncHearts, isWished: id => wish.includes(id), openQV, productURL, gsap, reduce, store };
 let pageIntro = null;
 if (PAGE === 'shop') ({ intro: pageIntro } = initShop(ctx) || {});
 if (PAGE === 'product') ({ intro: pageIntro } = initProduct(ctx) || {});
