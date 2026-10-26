@@ -1,5 +1,5 @@
 // NIZHNIST — Checkout (demo: nothing is sent anywhere)
-import { totals, recommend, SHIPPING, PROMOS } from './totals.js?v=261026101920';
+import { totals, recommend, SHIPPING, PROMOS } from './totals.js?v=261026102107';
 
 export function initCheckout(ctx) {
   const { $, $$, PRODUCTS, COLORS, money, getCart, setCart, addToCart, toast, store, swatchHTML, gsap, reduce } = ctx;
@@ -77,10 +77,30 @@ export function initCheckout(ctx) {
   // ---------- payment method ----------
   form.addEventListener('change', e => { if (e.target.name === 'pay') $$('.pay-card').forEach(c => (c.hidden = e.target.value !== 'card')); });
 
-  // ---------- steps (progress) ----------
-  const steps = $$('.co-step');
-  const io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { const i = steps.indexOf(en.target); $$('.co-prog li').forEach((li, k) => { li.classList.toggle('is-on', k === i); li.classList.toggle('is-done', k < i); }); } }), { rootMargin: '-40% 0px -55% 0px' });
-  steps.forEach(s => io.observe(s));
+  // ---------- steps (progress driven by completed fields) ----------
+  const steps = $$('.co-step'), prog = $$('.co-prog li');
+  const filled = el => {
+    if (el.closest('[hidden]')) return null;
+    const v = el.value.trim(); if (!v) return false;
+    const r = rules[el.dataset.rule]; return r ? r(v) === true : true;
+  };
+  function updateProg() {
+    let current = -1;
+    steps.forEach((s, i) => {
+      const req = $$('input[required], select[required]', s).map(filled).filter(x => x !== null);
+      const pct = req.length ? req.filter(Boolean).length / req.length : 1;
+      const li = prog[i];
+      li.style.setProperty('--p', pct);
+      li.classList.toggle('is-done', pct === 1);
+      if (pct < 1 && current < 0) current = i;
+    });
+    prog.forEach((li, i) => li.classList.toggle('is-on', i === current));
+    $('.co-place').classList.toggle('is-ready', current < 0);
+  }
+  form.addEventListener('input', updateProg);
+  form.addEventListener('change', updateProg);
+  prog.forEach((li, i) => li.addEventListener('click', () => { steps[i].scrollIntoView({ behavior: 'smooth', block: 'start' }); setTimeout(() => $('input, select', steps[i])?.focus({ preventScroll: true }), 600); }));
+  setTimeout(updateProg, 400); // after browser autofill
 
   // ---------- express pay (demo) ----------
   $$('.xpay').forEach(b => b.addEventListener('click', () => toast(`${b.dataset.name} — demo only, use the form below`)));

@@ -1689,3 +1689,16 @@ body[data-page="checkout"] .footer{padding-top:28px}
 .swatch{border:0}
 .pdp__panel{padding-left:4px;margin-left:-4px;padding-right:4px}
 [hidden]{display:none!important}
+/* Checkout progress — fills with completed fields */
+.co-prog{position:sticky;top:var(--header-h);z-index:20;background:rgba(244,241,233,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);margin:20px 0 28px;padding:14px 0 12px}
+.co-prog li{position:relative;cursor:pointer;border-top:0;padding-top:14px;display:flex;align-items:center;gap:6px;--p:0}
+.co-prog li::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:var(--line)}
+.co-prog li i{position:absolute;left:0;top:0;height:2px;width:100%;background:var(--ink);transform:scaleX(var(--p));transform-origin:left;transition:transform .6s var(--ease-out),background-color .4s}
+.co-prog li .n{margin-right:2px}
+.co-prog li b{margin-left:auto;width:18px;height:18px;border-radius:50%;background:var(--olive);color:#fff;font-size:10px;display:grid;place-items:center;transform:scale(0);transition:transform .45s var(--ease-out)}
+.co-prog li.is-done{color:var(--olive)}
+.co-prog li.is-done i{background:var(--olive)}
+.co-prog li.is-done b{transform:scale(1)}
+.co-prog li.is-on{color:var(--ink)}
+.co-prog li:hover{color:var(--ink)}
+.co-place.is-ready{background:var(--olive)}
